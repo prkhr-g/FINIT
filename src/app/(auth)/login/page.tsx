@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/providers/AuthProvider';
 import { useToast } from '@/providers/ToastProvider';
 import { authService } from '@/services/auth.service';
@@ -15,6 +15,21 @@ export default function LoginPage() {
   const { login } = useAuth();
   const { showToast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Handle Google OAuth callback if tokens are present in URL
+  useEffect(() => {
+    const accessToken = searchParams.get('accessToken');
+    const refreshToken = searchParams.get('refreshToken');
+    
+    if (accessToken && refreshToken) {
+      // For now, we mock the user data, or you can decode the JWT
+      // or fetch the user profile from /auth/profile
+      login(accessToken, refreshToken, { id: 'oauth-user', email: 'google-user@example.com', name: 'Google User', role: 'USER' });
+      showToast('Logged in with Google successfully!', 'success');
+      router.push('/dashboard');
+    }
+  }, [searchParams, login, router, showToast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +50,12 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = () => {
+    // Redirect to backend Google OAuth endpoint
+    window.location.href = 'http://localhost:3000/api/v1/auth/google';
+  };
+
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-900 p-4 sm:p-6 md:p-8">
@@ -122,6 +143,7 @@ export default function LoginPage() {
 
           <button
             type="button"
+            onClick={handleGoogleLogin}
             className="w-full border border-[#D8C3A5] hover:bg-white/40 active:scale-[0.99] rounded-[10px] py-3 text-[13px] text-[#3A3936] font-medium text-center mb-5.5 transition-all cursor-pointer"
           >
             Continue with Google
