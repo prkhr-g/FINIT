@@ -1,7 +1,11 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { getStoredToken } from '@/lib/auth';
 
+// Backend (Nest) listens on port 3000 by default and is globally prefixed
+// with /api/v1 (see src/main.ts in fint-backend). Override with
+// NEXT_PUBLIC_API_URL in .env.local if your backend runs elsewhere.
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,11 +14,9 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('fint_token');
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    const token = getStoredToken();
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -24,7 +26,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response.data,
   (error: any) => {
-    const message = error.response?.data?.message || 'Something went wrong';
+    const rawMessage = error.response?.data?.message;
+    // NestJS's ValidationPipe returns `message` as an array of strings
+    // (one per failed validation rule) instead of a single string.
+    const message = Array.isArray(rawMessage)
+      ? rawMessage.join(', ')
+      : rawMessage || error.message || 'Something went wrong';
     return Promise.reject(new Error(message));
   }
 );

@@ -1,15 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/providers/ToastProvider';
+import { authService } from '@/services/auth.service';
 
-export default function ResetPasswordPage() {
+const PASSWORD_RULES = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+function ResetPasswordForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
 
   // Dynamic Password Strength Meter
   const getPasswordStrength = () => {
@@ -26,6 +31,12 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) {
+      showToast('Reset link is invalid or missing. Please request a new one.', 'error');
+      return;
+    }
+
     if (!password || !confirmPassword) {
       showToast('Please fill in all fields', 'error');
       return;
@@ -36,13 +47,17 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    if (password.length < 8) {
-      showToast('Password must be at least 8 characters long', 'error');
+    if (!PASSWORD_RULES.test(password)) {
+      showToast(
+        'Password must have 8+ characters with uppercase, lowercase, a number and a special character',
+        'error'
+      );
       return;
     }
 
     setLoading(true);
     try {
+      await authService.resetPassword(token, password);
       showToast('Password updated successfully!', 'success');
       router.push('/login');
     } catch (err: any) {
@@ -80,6 +95,12 @@ export default function ResetPasswordPage() {
           <p className="text-[11px] tracking-[0.15em] text-[#E85A4F] font-bold m-0 mb-2">ALMOST DONE</p>
           <h1 className="text-[28px] font-semibold text-[#3A3936] m-0 mb-1.5 tracking-[-0.02em]">Set a new password</h1>
           <p className="text-[13px] text-[#8E8D8A] m-0 mb-7">Apna naya password banayein</p>
+
+          {!token && (
+            <p className="text-[12px] text-[#E85A4F] bg-[#F7EDEC] border border-[#E85A4F]/30 rounded-[10px] px-3.5 py-2.5 mb-4">
+              This reset link looks invalid or expired. Please request a new one from the forgot password page.
+            </p>
+          )}
 
           <div className="space-y-4 mb-4">
             <div>
@@ -127,5 +148,13 @@ export default function ResetPasswordPage() {
         </form>
       </div>
     </main>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

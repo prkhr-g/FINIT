@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/providers/AuthProvider';
 import { useToast } from '@/providers/ToastProvider';
+import { authService } from '@/services/auth.service';
 
 export default function SignupPage() {
   const [name, setName] = useState('');
@@ -12,8 +12,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  
-  const { login } = useAuth();
+
   const { showToast } = useToast();
   const router = useRouter();
 
@@ -29,16 +28,20 @@ export default function SignupPage() {
       return;
     }
 
-    if (password.length < 8) {
-      showToast('Password must be at least 8 characters long', 'error');
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!strongPassword.test(password)) {
+      showToast(
+        'Password must have 8+ characters with uppercase, lowercase, a number and a special character',
+        'error'
+      );
       return;
     }
 
     setLoading(true);
     try {
-      login('mock-token-xyz', { name, email, role: 'user' });
-      showToast('Account created successfully!', 'success');
-      router.push('/dashboard');
+      await authService.signup({ name, email, password });
+      showToast('Account created! Please check your email to verify your account.', 'success');
+      router.push('/login');
     } catch (err: any) {
       showToast(err.message || 'Registration failed', 'error');
     } finally {

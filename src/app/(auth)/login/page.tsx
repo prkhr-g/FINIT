@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/AuthProvider';
 import { useToast } from '@/providers/ToastProvider';
+import { authService } from '@/services/auth.service';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,7 +25,8 @@ export default function LoginPage() {
     
     setLoading(true);
     try {
-      login('mock-token-xyz', { name: 'Priya N.', email, role: 'user' });
+      const data = await authService.login({ email, password });
+      login(data.accessToken, data.refreshToken, data.user);
       showToast('Logged in successfully!', 'success');
       router.push('/dashboard');
     } catch (err: any) {

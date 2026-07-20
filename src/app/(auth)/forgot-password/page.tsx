@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useToast } from '@/providers/ToastProvider';
+import { authService } from '@/services/auth.service';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -18,7 +19,10 @@ export default function ForgotPasswordPage() {
 
     setLoading(true);
     try {
-      showToast('Reset link has been sent to your email!', 'success');
+      // Backend always responds with a generic message (whether or not the
+      // email exists) to avoid leaking which emails are registered.
+      await authService.forgotPassword(email);
+      showToast('If that email exists, a reset link has been sent.', 'success');
     } catch (err: any) {
       showToast(err.message || 'Failed to send reset link', 'error');
     } finally {
