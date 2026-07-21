@@ -1,74 +1,109 @@
 'use client';
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard Overview</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Real-time overview of your finances.</p>
+    <div>
+      <header className={styles.header}>
+        <div className={styles.greetingContainer}>
+          <span className={styles.greetingSub}>GOOD EVENING</span>
+          <h1 className={styles.greetingTitle}>Aarav, here's where things stand.</h1>
         </div>
-        <Button variant="primary">
-          Refresh Data
-        </Button>
+        <div className={styles.profileContainer}>
+          <button className={styles.notifBtn}>
+            <span className={styles.notifDot}></span>
+            {/* Optional icon inside button if needed, left blank to match design simplicity */}
+          </button>
+          <div className={styles.avatar}>AR</div>
+        </div>
+      </header>
+
+      <div className={`${styles.card} ${styles.scoreCard}`}>
+        <div className={styles.scoreGauge}>
+          <div className={styles.scoreContent}>
+            <span className={styles.scoreValue}>782</span>
+            <span className={styles.scoreGrade}>GRADE A</span>
+          </div>
+        </div>
+        <div className={styles.scoreInfo}>
+          <div className={styles.cardLabel}>FINT SCORE</div>
+          <h2 className={styles.scoreTitle}>Excellent financial health</h2>
+          <p className={styles.scoreDesc}>
+            Aapka score pichle quarter se <strong>24 points</strong> improve hua hai — savings rate aur investment diversity dono strong hain. Emergency fund thoda peeche hai.
+          </p>
+          <div className={styles.badge}>
+            <span className={styles.badgeDot}></span>
+            Risk level: Low
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Card hoverable>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Net Worth</span>
-            <span className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-sm">📈</span>
-          </div>
-          <div className="mt-4">
-            <span className="text-3xl font-bold text-slate-900 dark:text-white">₹12,48,500</span>
-            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold block mt-1">+4.2% from last month</span>
-          </div>
-        </Card>
-
-        <Card hoverable>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Savings</span>
-            <span className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-sm">💰</span>
-          </div>
-          <div className="mt-4">
-            <span className="text-3xl font-bold text-slate-900 dark:text-white">₹45,200</span>
-            <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold block mt-1">75% of monthly goal</span>
-          </div>
-        </Card>
-
-        <Card hoverable>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Expenses</span>
-            <span className="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 text-sm">📉</span>
-          </div>
-          <div className="mt-4">
-            <span className="text-3xl font-bold text-slate-900 dark:text-white">₹28,400</span>
-            <span className="text-xs text-rose-600 dark:text-rose-400 font-semibold block mt-1">-1.8% from last month</span>
-          </div>
-        </Card>
-
-        <Card hoverable>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">FINT Score</span>
-            <span className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-sm">💯</span>
-          </div>
-          <div className="mt-4">
-            <span className="text-3xl font-bold text-slate-900 dark:text-white">765 / 900</span>
-            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold block mt-1">Excellent Health</span>
-          </div>
-        </Card>
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <div className={styles.cardLabel}>MONTHLY INCOME</div>
+          <div className={styles.statValue}>₹1,25,000</div>
+          <div className={styles.statSub}>Same as last month</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.cardLabel}>MONTHLY EXPENSE</div>
+          <div className={styles.statValue}>₹68,400</div>
+          <div className={`${styles.statSub} ${styles.red}`}>↑ 8% vs last month</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.cardLabel}>NET WORTH</div>
+          <div className={styles.statValue}>₹18.4L</div>
+          <div className={`${styles.statSub} ${styles.green}`}>↑ 18% YoY</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.cardLabel}>ACTIVE GOALS</div>
+          <div className={styles.statValue}>3</div>
+          <div className={`${styles.statSub} ${styles.green}`}>2 on track</div>
+        </div>
       </div>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Detailed Analytics & Insights</h2>
-        <div className="h-64 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-600 text-sm bg-slate-50/50 dark:bg-slate-900/50">
-          Visual chart data for Dashboard Overview will render here.
+      <div className={styles.bottomGrid}>
+        <div className={styles.aiCard}>
+          <div className={styles.aiHeader}>
+            <span>✦</span> AI RECOMMENDATION
+          </div>
+          <h3 className={styles.aiTitle}>Your emergency fund needs attention</h3>
+          <p className={styles.aiDesc}>
+            Aapka expense-to-income ratio pichle mahine se 8% badha hai. Emergency fund ko 6 mahine tak badhane se score aur behtar ho sakta hai.
+          </p>
         </div>
-      </Card>
+
+        <div className={styles.activityCard}>
+          <div className={styles.activityHeader}>
+            <h3 className={styles.activityTitle}>Recent activity</h3>
+            <Link href="/activity" className={styles.viewAll}>View all</Link>
+          </div>
+          <div className={styles.activityList}>
+            <div className={styles.activityItem}>
+              <div className={styles.activityIcon}>🛒</div>
+              <div className={styles.activityDetails}>
+                <div className={styles.activityName}>Groceries — Big Bazaar</div>
+                <div className={styles.activityDate}>18 Jul</div>
+              </div>
+              <div className={`${styles.activityAmount} ${styles.negative}`}>
+                -₹3,200
+              </div>
+            </div>
+            <div className={styles.activityItem}>
+              <div className={styles.activityIcon}>💰</div>
+              <div className={styles.activityDetails}>
+                <div className={styles.activityName}>Salary credited</div>
+                <div className={styles.activityDate}>17 Jul</div>
+              </div>
+              <div className={`${styles.activityAmount} ${styles.positive}`}>
+                +₹1,25,000
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

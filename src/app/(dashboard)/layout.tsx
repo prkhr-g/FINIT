@@ -1,21 +1,49 @@
+'use client';
+
 import React from 'react';
-import { Navbar } from '@/components/layout/Navbar';
-import { Sidebar } from '@/components/layout/Sidebar';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import styles from './layout.module.css';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const navItems = [
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Finance', path: '/finance' },
+    { name: 'FINT score', path: '/score' },
+    { name: 'AI advisor', path: '/ai' },
+    { name: 'Reports', path: '/reports' },
+    { name: 'Settings', path: '/settings' },
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950">
-      <Navbar />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto">
-          {children}
-        </main>
-      </div>
+    <div className={styles.container}>
+      <aside className={styles.sidebar}>
+        <div className={styles.logo}>FINT</div>
+        <nav>
+          {navItems.map((item) => {
+            const isActive = pathname === item.path || (pathname === '/' && item.path === '/dashboard');
+            return (
+              <Link 
+                key={item.name} 
+                href={item.path}
+                className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+              >
+                <span className={styles.navIcon}></span>
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+      <main className={styles.mainContent}>
+        {children}
+      </main>
     </div>
   );
 }
