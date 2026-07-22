@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/providers/AuthProvider';
@@ -17,19 +17,25 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Guard so the OAuth-handling code below can only ever run ONCE per page load,
+  // no matter how many times this component re-renders.
+  const hasHandledOAuth = useRef(false);
+
   // Handle Google OAuth callback if tokens are present in URL
   useEffect(() => {
+    if (hasHandledOAuth.current) return;
+
     const accessToken = searchParams.get('accessToken');
     const refreshToken = searchParams.get('refreshToken');
     
     if (accessToken && refreshToken) {
-      // For now, we mock the user data, or you can decode the JWT
-      // or fetch the user profile from /auth/profile
+      hasHandledOAuth.current = true; // mark as handled BEFORE calling login/router
       login(accessToken, refreshToken, { id: 'oauth-user', email: 'google-user@example.com', name: 'Google User', role: 'USER' });
       showToast('Logged in with Google successfully!', 'success');
       router.push('/dashboard');
     }
-  }, [searchParams, login, router, showToast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

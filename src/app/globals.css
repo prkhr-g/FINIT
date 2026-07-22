@@ -1,8 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #e8d5d5;
+  --foreground: #02050e;
+
+  --bg-page: #ffffff;
+  --bg-sidebar: #293681;
+  --bg-card: #ffffff;
+  --border-card: #e5e7ef;
+  --border-style-card: solid;
+
+  --text-primary: #12141d;
+  --text-secondary: #5a5a5a;
+  --text-muted: #8a8a8a;
+  --text-inverse: #fbfaf7;
+
+  --accent-label: #4274d9;
+  --accent-sky: #95ccdd;
+  --accent-mist: #d0e7e6;
+  --accent-blue: #4274d9;
+
+  --ai-card-bg: #293681;
+  --scoregauge-track: #e5e7ef;
+  --nav-hover-bg: rgba(255, 255, 255, 0.1);
+
+  --red: #c14b4b;
+  --green: #2f8f6f;
+}
+
+html.dark {
+  --background: #0f1330;
+  --foreground: #fbfaf7;
+
+  --bg-page: #0f1330;
+  --bg-sidebar: #151a45;
+  --bg-card: #151a45;
+  --border-card: rgba(114, 93, 93, 0.3);
+  --border-style-card: dashed;
+
+  --text-primary: #fbfaf7;
+  --text-secondary: #b8c0dd;
+  --text-muted: #8a91b8;
+  --text-inverse: #fbfaf7;
+
+  --accent-label: #95ccdd;
+  --accent-sky: #95ccdd;
+  --accent-mist: #d0e7e6;
+  --accent-blue: #4274d9;
+
+  --ai-card-bg: #1c2354;
+  --scoregauge-track: rgba(149, 204, 221, 0.15);
+  --nav-hover-bg: rgba(149, 204, 221, 0.1);
+
+  --red: #e07a72;
+  --green: #6fd1a8;
 }
 
 @theme inline {
@@ -12,15 +63,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-page);
+  color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
