@@ -15,6 +15,7 @@ export const Sidebar: React.FC = () => {
 
   const menuItems: SidebarItem[] = [
     { name: 'Dashboard', path: '/dashboard', icon: <span className="text-lg">📊</span> },
+    { name: 'Finance', path: '/finance', icon: <span className="text-lg">💼</span> },
     { name: 'Income', path: '/income', icon: <span className="text-lg">💵</span> },
     { name: 'Expense', path: '/expense', icon: <span className="text-lg">📉</span> },
     { name: 'Assets', path: '/assets', icon: <span className="text-lg">🏠</span> },
