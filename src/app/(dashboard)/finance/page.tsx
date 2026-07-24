@@ -2,138 +2,130 @@
 
 import React from 'react';
 import styles from './page.module.css';
-import { financeService, IncomeEntry, ExpenseEntry } from '@/services/finance.service';
+import { PILLARS, FieldConfig, FinanceEntry } from './pillars.config';
 
-type Tab = 'income' | 'expense';
+type DataMap = Record<string, FinanceEntry[]>;
 
-const INCOME_CATEGORIES = ['SALARY', 'BUSINESS', 'RENTAL', 'FREELANCE', 'INTEREST', 'DIVIDEND', 'PENSION', 'OTHER'];
-const INCOME_FREQUENCIES = ['DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY', 'ONE_TIME'];
-const EXPENSE_CATEGORIES = ['FOOD', 'TRAVEL', 'SHOPPING', 'MEDICAL', 'RENT', 'UTILITIES', 'EDUCATION', 'ENTERTAINMENT', 'INVESTMENT', 'EMI', 'OTHER'];
-const PAYMENT_METHODS = ['CASH', 'CARD', 'UPI', 'NET_BANKING', 'CHEQUE', 'OTHER'];
+const fmt = (n: number) => `₹${Math.round(n).toLocaleString('en-IN')}`;
+
+function buildInitialForm(fields: FieldConfig[]) {
+  const initial: Record<string, string> = {};
+  fields.forEach((f) => {
+    initial[f.name] = f.defaultValue ?? '';
+  });
+  return initial;
+}
 
 export default function FinancePage() {
-  const [tab, setTab] = React.useState<Tab>('income');
+  const [activeKey, setActiveKey] = React.useState(PILLARS[0].key);
+  const active = PILLARS.find((p) => p.key === activeKey) ?? PILLARS[0];
 
-  const [incomes, setIncomes] = React.useState<IncomeEntry[]>([]);
-  const [expenses, setExpenses] = React.useState<ExpenseEntry[]>([]);
-  const [loadingList, setLoadingList] = React.useState(true);
+  const [data, setData] = React.useState<DataMap>({});
+  const [loadingAll, setLoadingAll] = React.useState(true);
 
+  const [form, setForm] = React.useState<Record<string, string>>(() => buildInitialForm(active.fields));
   const [submitting, setSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState<string | null>(null);
 
-  // Income form state
-  const [incomeForm, setIncomeForm] = React.useState({
-    source: '',
-    category: 'SALARY',
-    amount: '',
-    frequency: 'MONTHLY',
-  });
-
-  // Expense form state
-  const [expenseForm, setExpenseForm] = React.useState({
-    title: '',
-    category: 'FOOD',
-    amount: '',
-    paymentMethod: 'UPI',
-  });
-
-  const loadData = React.useCallback(async () => {
-    setLoadingList(true);
-    try {
-      const [inc, exp] = await Promise.all([
-        financeService.getIncomes(),
-        financeService.getExpenses(),
-      ]);
-      setIncomes(inc);
-      setExpenses(exp);
-    } catch {
-      // Non-fatal on first load (e.g. brand new user with nothing yet) —
-      // lists just stay empty, no error banner needed for a GET.
-    } finally {
-      setLoadingList(false);
-    }
+  const loadAll = React.useCallback(async () => {
+    setLoadingAll(true);
+    const results = await Promise.allSettled(PILLARS.map((p) => p.list()));
+    const next: DataMap = {};
+    PILLARS.forEach((p, i) => {
+      const r = results[i];
+      next[p.key] = r.status === 'fulfilled' ? r.value : [];
+    });
+    setData(next);
+    setLoadingAll(false);
   }, []);
 
   React.useEffect(() => {
-    loadData();
-  }, [loadData]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data load on mount, not a render-driven cascade
+    loadAll();
+  }, [loadAll]);
 
-  const resetMessages = () => {
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting the form when the user switches pillar tabs
+    setForm(buildInitialForm(active.fields));
     setError(null);
     setSuccess(null);
+  }, [activeKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const entries = React.useMemo(() => data[active.key] ?? [], [data, active.key]);
+
+  const total = React.useMemo(
+    () => entries.reduce((sum, e) => sum + active.getAmount(e), 0),
+    [entries, active]
+  );
+
+  // ---- Overview strip, computed once all pillars have loaded ----
+  const assetsTotal = (data.assets ?? []).reduce((s, e) => s + (Number(e.currentValue) || 0), 0);
+  const investmentsTotal = (data.investments ?? []).reduce(
+    (s, e) => s + (Number(e.currentPrice) || 0) * (Number(e.quantity) || 1),
+    0
+  );
+  const accountsTotal = (data.accounts ?? []).reduce((s, e) => s + (Number(e.currentBalance) || 0), 0);
+  const loansTotal = (data.loans ?? []).reduce((s, e) => s + (Number(e.remainingBalance) || 0), 0);
+  const netWorth = assetsTotal + investmentsTotal + accountsTotal - loansTotal;
+
+  const incomeTotal = (data.income ?? []).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const expenseTotal = (data.expense ?? []).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const cashFlow = incomeTotal - expenseTotal;
+
+  const coverageTotal = (data.insurance ?? []).reduce((s, e) => s + (Number(e.coverageAmount) || 0), 0);
+
+  const goalsList = data.goals ?? [];
+  const activeGoals = goalsList.filter((g) => (g.status ?? 'ACTIVE') === 'ACTIVE').length;
+  const goalsTarget = goalsList.reduce((s, e) => s + (Number(e.targetAmount) || 0), 0);
+  const goalsSaved = goalsList.reduce((s, e) => s + (Number(e.currentAmount) || 0), 0);
+  const goalsProgress = goalsTarget > 0 ? Math.min(1, goalsSaved / goalsTarget) : 0;
+
+  const handleChange = (name: string, value: string) => {
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddIncome = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    resetMessages();
-    if (!incomeForm.source.trim() || !incomeForm.amount) {
-      setError('Please fill in source and amount.');
+    setError(null);
+    setSuccess(null);
+
+    const missing = active.fields.find((f) => f.required && !String(form[f.name] ?? '').trim());
+    if (missing) {
+      setError(`Please fill in ${missing.label.toLowerCase()}.`);
       return;
     }
+
+    const payload: Record<string, string | number> = {};
+    active.fields.forEach((f) => {
+      const raw = form[f.name];
+      if (raw === undefined || raw === '') return;
+      payload[f.name] = f.type === 'number' ? Number(raw) : raw;
+    });
+
     setSubmitting(true);
     try {
-      await financeService.addIncome({
-        source: incomeForm.source.trim(),
-        category: incomeForm.category,
-        amount: Number(incomeForm.amount),
-        frequency: incomeForm.frequency,
-      });
-      setSuccess('Income added.');
-      setIncomeForm({ source: '', category: 'SALARY', amount: '', frequency: 'MONTHLY' });
-      loadData();
-    } catch (err: any) {
-      setError(err.message || 'Could not add income.');
+      await active.create(payload);
+      setSuccess(`${active.label.slice(0, -1) || active.label} added.`);
+      setForm(buildInitialForm(active.fields));
+      loadAll();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : `Could not add ${active.label.toLowerCase()}.`);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleAddExpense = async (e: React.FormEvent) => {
-    e.preventDefault();
-    resetMessages();
-    if (!expenseForm.title.trim() || !expenseForm.amount) {
-      setError('Please fill in title and amount.');
-      return;
-    }
-    setSubmitting(true);
+  const handleDelete = async (id: string) => {
+    const prev = data[active.key] ?? [];
+    setData((d) => ({ ...d, [active.key]: prev.filter((e) => e.id !== id) }));
     try {
-      await financeService.addExpense({
-        title: expenseForm.title.trim(),
-        category: expenseForm.category,
-        amount: Number(expenseForm.amount),
-        paymentMethod: expenseForm.paymentMethod,
-      });
-      setSuccess('Expense added.');
-      setExpenseForm({ title: '', category: 'FOOD', amount: '', paymentMethod: 'UPI' });
-      loadData();
-    } catch (err: any) {
-      setError(err.message || 'Could not add expense.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDeleteIncome = async (id: string) => {
-    try {
-      await financeService.deleteIncome(id);
-      setIncomes((prev) => prev.filter((i) => i.id !== id));
+      await active.remove(id);
     } catch {
-      setError('Could not delete that income entry.');
+      setData((d) => ({ ...d, [active.key]: prev }));
+      setError(`Could not remove that entry.`);
     }
   };
-
-  const handleDeleteExpense = async (id: string) => {
-    try {
-      await financeService.deleteExpense(id);
-      setExpenses((prev) => prev.filter((e) => e.id !== id));
-    } catch {
-      setError('Could not delete that expense entry.');
-    }
-  };
-
-  const incomeTotal = incomes.reduce((sum, i) => sum + Number(i.amount), 0);
-  const expenseTotal = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
   return (
     <div className={styles.page}>
@@ -141,202 +133,139 @@ export default function FinancePage() {
         <div>
           <h1 className={styles.title}>Finance</h1>
           <p className={styles.subtitle}>
-            Add your income and expenses here — this data powers your FINT Score.
+            One place for every pillar of your money — this data powers your FINT Score.
           </p>
         </div>
       </div>
 
-      <div className={styles.tabRow}>
-        <button
-          className={`${styles.tab} ${tab === 'income' ? styles.tabActive : ''}`}
-          onClick={() => { setTab('income'); resetMessages(); }}
-        >
-          INCOME
-        </button>
-        <button
-          className={`${styles.tab} ${tab === 'expense' ? styles.tabActive : ''}`}
-          onClick={() => { setTab('expense'); resetMessages(); }}
-        >
-          EXPENSE
-        </button>
+      <div className={styles.overviewGrid}>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>NET WORTH</span>
+          <span className={styles.overviewValue}>
+            {loadingAll ? '—' : fmt(netWorth)}
+          </span>
+          <span className={styles.overviewSub}>Accounts + assets + investments − loans</span>
+        </div>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>CASH FLOW</span>
+          <span className={`${styles.overviewValue} ${cashFlow < 0 ? styles.negative : ''}`}>
+            {loadingAll ? '—' : `${cashFlow >= 0 ? '+' : '−'}${fmt(Math.abs(cashFlow))}`}
+          </span>
+          <span className={styles.overviewSub}>
+            {loadingAll ? 'Loading…' : `${fmt(incomeTotal)} in · ${fmt(expenseTotal)} out`}
+          </span>
+        </div>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>INSURANCE COVER</span>
+          <span className={styles.overviewValue}>{loadingAll ? '—' : fmt(coverageTotal)}</span>
+          <span className={styles.overviewSub}>{(data.insurance ?? []).length} active {(data.insurance ?? []).length === 1 ? 'policy' : 'policies'}</span>
+        </div>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>GOALS</span>
+          <span className={styles.overviewValue}>{loadingAll ? '—' : `${activeGoals} active`}</span>
+          <div className={styles.overviewProgressTrack}>
+            <div className={styles.overviewProgressFill} style={{ width: `${Math.round(goalsProgress * 100)}%` }} />
+          </div>
+          <span className={styles.overviewSub}>
+            {loadingAll ? 'Loading…' : `${fmt(goalsSaved)} of ${fmt(goalsTarget)} saved`}
+          </span>
+        </div>
       </div>
 
-      <div className={styles.layout}>
-        {tab === 'income' ? (
-          <form className={styles.formCard} onSubmit={handleAddIncome}>
-            <h2 className={styles.formTitle}>Add income</h2>
+      <div className={styles.tabRow}>
+        {PILLARS.map((p) => (
+          <button
+            key={p.key}
+            className={`${styles.tab} ${activeKey === p.key ? styles.tabActive : ''}`}
+            onClick={() => setActiveKey(p.key)}
+          >
+            <span className={styles.tabIcon}>{p.icon}</span>
+            {p.label.toUpperCase()}
+          </button>
+        ))}
+      </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>SOURCE</label>
-              <input
-                className={styles.input}
-                placeholder="e.g. Company salary"
-                value={incomeForm.source}
-                onChange={(e) => setIncomeForm({ ...incomeForm, source: e.target.value })}
-              />
-            </div>
+      <p className={styles.tagline}>{active.tagline}</p>
 
-            <div className={styles.field}>
-              <label className={styles.label}>CATEGORY</label>
-              <select
-                className={styles.select}
-                value={incomeForm.category}
-                onChange={(e) => setIncomeForm({ ...incomeForm, category: e.target.value })}
-              >
-                {INCOME_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
+      <div className={styles.layout} key={activeKey}>
+        <form className={styles.formCard} onSubmit={handleSubmit}>
+          <h2 className={styles.formTitle}>{active.formTitle}</h2>
 
-            <div className={styles.row2}>
-              <div className={styles.field}>
-                <label className={styles.label}>AMOUNT (₹)</label>
-                <input
-                  className={styles.input}
-                  type="number"
-                  min="0"
-                  placeholder="0"
-                  value={incomeForm.amount}
-                  onChange={(e) => setIncomeForm({ ...incomeForm, amount: e.target.value })}
-                />
-              </div>
-              <div className={styles.field}>
-                <label className={styles.label}>FREQUENCY</label>
+          {active.fields.map((f) => (
+            <div className={styles.field} key={f.name}>
+              <label className={styles.label}>{f.label}</label>
+              {f.type === 'select' ? (
                 <select
                   className={styles.select}
-                  value={incomeForm.frequency}
-                  onChange={(e) => setIncomeForm({ ...incomeForm, frequency: e.target.value })}
+                  value={form[f.name] ?? ''}
+                  onChange={(e) => handleChange(f.name, e.target.value)}
                 >
-                  {INCOME_FREQUENCIES.map((f) => (
-                    <option key={f} value={f}>{f}</option>
+                  {(f.options ?? []).map((o) => (
+                    <option key={o} value={o}>
+                      {o.replace(/_/g, ' ')}
+                    </option>
                   ))}
                 </select>
-              </div>
+              ) : (
+                <div className={styles.inputWrap}>
+                  <input
+                    className={styles.input}
+                    type={f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text'}
+                    min={f.type === 'number' ? '0' : undefined}
+                    step={f.type === 'number' ? 'any' : undefined}
+                    placeholder={f.placeholder}
+                    value={form[f.name] ?? ''}
+                    onChange={(e) => handleChange(f.name, e.target.value)}
+                  />
+                  {f.suffix && <span className={styles.inputSuffix}>{f.suffix}</span>}
+                </div>
+              )}
             </div>
+          ))}
 
-            <button className={styles.submitBtn} type="submit" disabled={submitting}>
-              {submitting ? 'Adding…' : 'Add income'}
-            </button>
-            {error && <p className={styles.errorText}>{error}</p>}
-            {success && <p className={styles.successText}>{success}</p>}
-          </form>
-        ) : (
-          <form className={styles.formCard} onSubmit={handleAddExpense}>
-            <h2 className={styles.formTitle}>Add expense</h2>
-
-            <div className={styles.field}>
-              <label className={styles.label}>TITLE</label>
-              <input
-                className={styles.input}
-                placeholder="e.g. Grocery shopping"
-                value={expenseForm.title}
-                onChange={(e) => setExpenseForm({ ...expenseForm, title: e.target.value })}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>CATEGORY</label>
-              <select
-                className={styles.select}
-                value={expenseForm.category}
-                onChange={(e) => setExpenseForm({ ...expenseForm, category: e.target.value })}
-              >
-                {EXPENSE_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.row2}>
-              <div className={styles.field}>
-                <label className={styles.label}>AMOUNT (₹)</label>
-                <input
-                  className={styles.input}
-                  type="number"
-                  min="0"
-                  placeholder="0"
-                  value={expenseForm.amount}
-                  onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
-                />
-              </div>
-              <div className={styles.field}>
-                <label className={styles.label}>PAYMENT METHOD</label>
-                <select
-                  className={styles.select}
-                  value={expenseForm.paymentMethod}
-                  onChange={(e) => setExpenseForm({ ...expenseForm, paymentMethod: e.target.value })}
-                >
-                  {PAYMENT_METHODS.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <button className={styles.submitBtn} type="submit" disabled={submitting}>
-              {submitting ? 'Adding…' : 'Add expense'}
-            </button>
-            {error && <p className={styles.errorText}>{error}</p>}
-            {success && <p className={styles.successText}>{success}</p>}
-          </form>
-        )}
+          <button className={styles.submitBtn} type="submit" disabled={submitting}>
+            {submitting ? 'Adding…' : active.formTitle}
+          </button>
+          {error && <p className={styles.errorText}>{error}</p>}
+          {success && <p className={styles.successText}>{success}</p>}
+        </form>
 
         <div className={styles.listCard}>
           <div className={styles.listHeader}>
-            <h2 className={styles.listTitle}>
-              {tab === 'income' ? 'Your income sources' : 'Your expenses'}
-            </h2>
+            <h2 className={styles.listTitle}>{active.label}</h2>
             <span className={styles.listTotal}>
-              ₹{(tab === 'income' ? incomeTotal : expenseTotal).toLocaleString('en-IN')}
+              {active.sumLabel} · {fmt(total)}
             </span>
           </div>
 
-          {loadingList ? (
+          {loadingAll ? (
             <div className={styles.emptyState}>Loading…</div>
-          ) : tab === 'income' ? (
-            incomes.length === 0 ? (
-              <div className={styles.emptyState}>
-                No income sources yet. Add one on the left to get started.
-              </div>
-            ) : (
-              <div className={styles.entryList}>
-                {incomes.map((i) => (
-                  <div key={i.id} className={styles.entryRow}>
+          ) : entries.length === 0 ? (
+            <div className={styles.emptyState}>{active.emptyMessage}</div>
+          ) : (
+            <div className={styles.entryList}>
+              {entries.map((e) => {
+                const progress = active.getProgress ? active.getProgress(e) : null;
+                return (
+                  <div key={e.id} className={styles.entryRow}>
                     <div className={styles.entryMain}>
-                      <span className={styles.entryTitle}>{i.source}</span>
-                      <span className={styles.entryMeta}>{i.category} · {i.frequency}</span>
+                      <span className={styles.entryTitle}>{active.getTitle(e)}</span>
+                      <span className={styles.entryMeta}>{active.getMeta(e)}</span>
+                      {progress !== null && (
+                        <div className={styles.entryProgressTrack}>
+                          <div className={styles.entryProgressFill} style={{ width: `${Math.round(progress * 100)}%` }} />
+                        </div>
+                      )}
                     </div>
                     <div className={styles.entryRight}>
-                      <span className={styles.entryAmount}>₹{Number(i.amount).toLocaleString('en-IN')}</span>
-                      <button className={styles.deleteBtn} onClick={() => handleDeleteIncome(i.id)}>
+                      <span className={styles.entryAmount}>{fmt(active.getAmount(e))}</span>
+                      <button className={styles.deleteBtn} onClick={() => handleDelete(e.id)}>
                         Remove
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )
-          ) : expenses.length === 0 ? (
-            <div className={styles.emptyState}>
-              No expenses logged yet. Add one on the left to get started.
-            </div>
-          ) : (
-            <div className={styles.entryList}>
-              {expenses.map((e) => (
-                <div key={e.id} className={styles.entryRow}>
-                  <div className={styles.entryMain}>
-                    <span className={styles.entryTitle}>{e.title}</span>
-                    <span className={styles.entryMeta}>{e.category} · {e.paymentMethod}</span>
-                  </div>
-                  <div className={styles.entryRight}>
-                    <span className={styles.entryAmount}>₹{Number(e.amount).toLocaleString('en-IN')}</span>
-                    <button className={styles.deleteBtn} onClick={() => handleDeleteExpense(e.id)}>
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

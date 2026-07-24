@@ -1,0 +1,406 @@
+.page {
+  padding-bottom: 64px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.recalcBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent-blue);
+  color: #fbfaf7;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.recalcBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(66, 116, 217, 0.35);
+}
+
+.recalcBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Score summary card ---- */
+
+.summaryCard {
+  background: var(--bg-card);
+  border: 1px var(--border-style-card) var(--border-card);
+  border-radius: 16px;
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 24px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+  flex-wrap: wrap;
+}
+
+.summaryCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(66, 116, 217, 0.15);
+}
+
+.scoreGauge {
+  flex-shrink: 0;
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html.dark .scoreGauge {
+  background: conic-gradient(var(--accent-blue) var(--fill-deg, 0deg), rgba(149, 204, 221, 0.15) var(--fill-deg, 0deg) 360deg);
+  box-shadow: 0 0 20px rgba(66, 116, 217, 0.3);
+}
+
+html:not(.dark) .scoreGauge {
+  background: conic-gradient(var(--accent-blue) var(--fill-deg, 0deg), #e5e7ef var(--fill-deg, 0deg) 360deg);
+  box-shadow: 0 4px 16px rgba(66, 116, 217, 0.15);
+}
+
+.scoreContent {
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.scoreGaugeFilled {
+  background: conic-gradient(var(--accent-blue) var(--fill-deg, 0deg), var(--scoregauge-track) var(--fill-deg, 0deg) 360deg);
+}
+
+
+.scoreValue {
+  font-family: 'Courier New', monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--accent-label);
+}
+
+.scoreOutOf {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+.summaryInfo {
+  flex: 1;
+  min-width: 220px;
+}
+
+.gradeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.gradeBadge {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(66, 116, 217, 0.15);
+  color: var(--accent-blue);
+}
+
+.riskBadge {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: rgba(208, 231, 230, 0.25);
+  color: var(--text-secondary);
+}
+
+.statusLine {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.deltaLine {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.deltaUp { color: var(--green); font-weight: 600; }
+.deltaDown { color: var(--red); font-weight: 600; }
+
+/* ---- Missing data banner ---- */
+
+.missingBanner {
+  background: rgba(66, 116, 217, 0.08);
+  border: 1px dashed var(--accent-blue);
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.missingIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.missingText {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.missingLinks {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.missingLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.missingLink:hover {
+  text-decoration: underline;
+}
+
+/* ---- Pillars ---- */
+
+.sectionTitle {
+  font-family: Georgia, serif;
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+}
+
+.pillarsCard {
+  background: var(--bg-card);
+  border: 1px var(--border-style-card) var(--border-card);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  transition: background-color 0.3s ease;
+}
+
+.pillarRow {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.pillarRow:last-child {
+  border-bottom: none;
+}
+
+.pillarTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.pillarName {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pillarWeight {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: 8px;
+  font-weight: 400;
+}
+
+.pillarScore {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pillarTrack {
+  height: 8px;
+  border-radius: 100px;
+  background: var(--scoregauge-track);
+  overflow: hidden;
+}
+
+.pillarFill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.5s ease;
+}
+
+.fillWeak { background: var(--red); }
+.fillMid { background: #e8a23d; }
+.fillGood { background: var(--green); }
+
+.pillarTip {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  background: rgba(66, 116, 217, 0.06);
+  border-left: 2px solid var(--accent-blue);
+  border-radius: 4px;
+}
+
+/* ---- History trend ---- */
+
+.trendCard {
+  background: var(--bg-card);
+  border: 1px var(--border-style-card) var(--border-card);
+  border-radius: 16px;
+  padding: 28px 28px 12px;
+  margin-bottom: 24px;
+  transition: transform 0.25s ease, background-color 0.3s ease;
+}
+
+.trendCard:hover {
+  transform: translateY(-3px);
+}
+
+.chartEmpty {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  padding: 0 20px;
+  border: 1px dashed var(--border-card);
+  border-radius: 12px;
+}
+
+/* ---- Methodology ---- */
+
+.methodologyCard {
+  background: var(--bg-card);
+  border: 1px var(--border-style-card) var(--border-card);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.methodologyToggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.methodologyIcon {
+  transition: transform 0.25s ease;
+  color: var(--accent-blue);
+}
+
+.methodologyIconOpen {
+  transform: rotate(180deg);
+}
+.pillarTrack {
+  height: 8px;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.trackTint0 { background: rgba(66, 116, 217, 0.15); }   /* blue */
+.trackTint1 { background: rgba(149, 204, 221, 0.3); }   /* sky */
+.trackTint2 { background: rgba(208, 231, 230, 0.5); }   /* mist */
+.trackTint3 { background: rgba(41, 54, 129, 0.12); }    /* indigo */
+
+.pillarFill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.5s ease;
+}
+
+.methodologyBody {
+  padding: 0 28px 24px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.loading {
+  padding: 80px;
+  text-align: center;
+  color: var(--accent-blue);
+  font-family: 'Courier New', monospace;
+}
+
+@media (max-width: 700px) {
+  .summaryCard { flex-direction: column; text-align: center; }
+}
+ 

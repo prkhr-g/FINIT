@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e8d5d5;
-  --foreground: #02050e;
+  --background: #f7f9fc;
+  --foreground: #1a1f36;
 
-  --bg-page: #ffffff;
+  --bg-page: #f4f7fb;
   --bg-sidebar: #293681;
   --bg-card: #ffffff;
   --border-card: #e5e7ef;
   --border-style-card: solid;
 
-  --text-primary: #12141d;
+  --text-primary: #1a1f36;
   --text-secondary: #5a5a5a;
   --text-muted: #8a8a8a;
   --text-inverse: #fbfaf7;
@@ -23,6 +23,8 @@
   --ai-card-bg: #293681;
   --scoregauge-track: #e5e7ef;
   --nav-hover-bg: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 4px 20px rgba(66, 116, 217, 0.06);
+  --card-shadow-hover: 0 12px 28px rgba(66, 116, 217, 0.14);
 
   --red: #c14b4b;
   --green: #2f8f6f;
