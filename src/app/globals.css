@@ -1,73 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f9fc;
-  --foreground: #1a1f36;
-
-  --bg-page: #f4f7fb;
-  --bg-sidebar: #293681;
-  --bg-card: #ffffff;
-  --border-card: #e5e7ef;
-  --border-style-card: solid;
-
-  --text-primary: #1a1f36;
-  --text-secondary: #5a5a5a;
-  --text-muted: #8a8a8a;
-  --text-inverse: #fbfaf7;
-
-  --accent-label: #4274d9;
-  --accent-sky: #95ccdd;
-  --accent-mist: #d0e7e6;
-  --accent-blue: #4274d9;
-
-  --ai-card-bg: #293681;
-  --scoregauge-track: #e5e7ef;
-  --nav-hover-bg: rgba(255, 255, 255, 0.1);
-  --card-shadow: 0 4px 20px rgba(66, 116, 217, 0.06);
-  --card-shadow-hover: 0 12px 28px rgba(66, 116, 217, 0.14);
-
-  --red: #c14b4b;
-  --green: #2f8f6f;
+  --bg-main: #FAF7F2;
+  --bg-sidebar: #1E234A;
+  --bg-header: #1E234A;
+  --bg-card: #FFFFFF;
+  --bg-ai-card: #1E234A;
+  --border-card: 1px solid #EAE3D9;
+  --border-style: solid;
+  
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-header: #FFFFFF;
+  --text-label: #5369A8;
+  --text-logo: #FFFFFF;
+  --text-ai-card: #FFFFFF;
+  
+  --nav-active-bg: #4175FC;
+  --nav-active-text: #FFFFFF;
+  --nav-inactive-text: #8993B0;
+  
+  --chart-ring-bg: #EFEFEF;
+  --chart-ring-fg: #4175FC;
 }
 
-html.dark {
-  --background: #0f1330;
-  --foreground: #fbfaf7;
-
-  --bg-page: #0f1330;
-  --bg-sidebar: #151a45;
-  --bg-card: #151a45;
-  --border-card: rgba(114, 93, 93, 0.3);
-  --border-style-card: dashed;
-
-  --text-primary: #fbfaf7;
-  --text-secondary: #b8c0dd;
-  --text-muted: #8a91b8;
-  --text-inverse: #fbfaf7;
-
-  --accent-label: #95ccdd;
-  --accent-sky: #95ccdd;
-  --accent-mist: #d0e7e6;
-  --accent-blue: #4274d9;
-
-  --ai-card-bg: #1c2354;
-  --scoregauge-track: rgba(149, 204, 221, 0.15);
-  --nav-hover-bg: rgba(149, 204, 221, 0.1);
-
-  --red: #e07a72;
-  --green: #6fd1a8;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: #060814;
+    --bg-sidebar: #0C1021;
+    --bg-header: transparent;
+    --bg-card: #0A0D20;
+    --bg-ai-card: #0A0D20;
+    --border-card: 1px dashed #293056;
+    --border-style: dashed;
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #8993B0;
+    --text-header: #FFFFFF;
+    --text-label: #5369A8;
+    --text-logo: #FFFFFF;
+    --text-ai-card: #FFFFFF;
+    
+    --nav-active-bg: #3262FE;
+    --nav-active-text: #FFFFFF;
+    --nav-inactive-text: #8993B0;
+    
+    --chart-ring-bg: #1B2144;
+    --chart-ring-fg: #3262FE;
+  }
 }
 
 body {
-  background: var(--bg-page);
+  background: var(--bg-main);
   color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
