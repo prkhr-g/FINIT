@@ -33,13 +33,13 @@ export class CreateInsuranceDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsDateString()
-  startDate: string;
+  @Type(() => Date)
+  startDate: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsDateString()
-  expiryDate?: string;
+  @Type(() => Date)
+  expiryDate?: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
