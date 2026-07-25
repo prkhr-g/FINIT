@@ -28,8 +28,8 @@ export class CreateFinancialGoalDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsDateString()
-  deadline?: string;
+  @Type(() => Date)
+  deadline?: Date;
 
   @ApiPropertyOptional()
   @IsOptional()

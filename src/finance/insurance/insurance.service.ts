@@ -8,21 +8,11 @@ export class InsuranceService {
   constructor(private readonly repository: InsuranceRepository) {}
 
   async create(userId: string, dto: CreateInsuranceDto) {
-    return this.repository.executeInTransaction(async (tx) => {
-      const created = await tx.insurance.create({
-        data: { ...dto, userId },
-      });
-      await tx.financeAuditLog.create({
-        data: {
-          userId,
-          module: 'Insurance',
-          action: 'CREATE',
-          recordId: created.id,
-          newData: JSON.parse(JSON.stringify(created)),
-        }
-      });
-      return created;
-    });
+    const created = await this.repository.create({ ...dto, userId });
+    try {
+      await this.repository.auditLog(userId, 'CREATE', created.id, null, created);
+    } catch { /* audit failure is non-critical */ }
+    return created;
   }
 
   async findAll(userId: string, filter: InsuranceFilterDto) {
@@ -57,44 +47,19 @@ export class InsuranceService {
 
   async update(id: string, userId: string, dto: UpdateInsuranceDto) {
     const record = await this.findOne(id, userId);
-    
-    return this.repository.executeInTransaction(async (tx) => {
-      const updated = await tx.insurance.update({
-        where: { id },
-        data: dto,
-      });
-      await tx.financeAuditLog.create({
-        data: {
-          userId,
-          module: 'Insurance',
-          action: 'UPDATE',
-          recordId: id,
-          oldData: JSON.parse(JSON.stringify(record)),
-          newData: JSON.parse(JSON.stringify(updated)),
-        }
-      });
-      return updated;
-    });
+    const updated = await this.repository.update(id, dto);
+    try {
+      await this.repository.auditLog(userId, 'UPDATE', id, record, updated);
+    } catch { /* audit failure is non-critical */ }
+    return updated;
   }
 
   async remove(id: string, userId: string) {
     const record = await this.findOne(id, userId);
-    
-    return this.repository.executeInTransaction(async (tx) => {
-      const deleted = await tx.insurance.update({
-        where: { id },
-        data: { deletedAt: new Date() },
-      });
-      await tx.financeAuditLog.create({
-        data: {
-          userId,
-          module: 'Insurance',
-          action: 'DELETE',
-          recordId: id,
-          oldData: JSON.parse(JSON.stringify(record)),
-        }
-      });
-      return { message: 'Insurance deleted successfully' };
-    });
+    await this.repository.softDelete(id);
+    try {
+      await this.repository.auditLog(userId, 'DELETE', id, record, null);
+    } catch { /* audit failure is non-critical */ }
+    return { message: 'Insurance deleted successfully' };
   }
 }

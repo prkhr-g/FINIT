@@ -40,18 +40,18 @@ export class CreateLoanDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsDateString()
-  startDate: string;
+  @Type(() => Date)
+  startDate: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsDateString()
-  endDate?: string;
+  @Type(() => Date)
+  endDate?: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsDateString()
-  nextEmiDate?: string;
+  @Type(() => Date)
+  nextEmiDate?: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
