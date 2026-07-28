@@ -193,9 +193,6 @@ export default function ScorePage() {
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>FINT Score</h1>
-          <p className={styles.subtitle}>
-            Quantitative evaluation of your global financial stability and trajectory.
-          </p>
         </div>
         <button
           className={styles.recalcBtn}
@@ -242,8 +239,8 @@ export default function ScorePage() {
               )}
               <defs>
                 <linearGradient id="fintGaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#4f46e5" />
-                  <stop offset="100%" stopColor="#4edea3" />
+                  <stop offset="0%" stopColor="#2e5bff" />
+                  <stop offset="100%" stopColor="#48d9ff" />
                 </linearGradient>
               </defs>
             </svg>
@@ -316,6 +313,40 @@ export default function ScorePage() {
               Recommendations will appear here once your score has been calculated.
             </p>
           )}
+        </section>
+
+        {/* ---- Grade Analysis ---- */}
+        <section className={styles.gradeSection}>
+          <div className={styles.gradeContainer}>
+            <div className={styles.gradeInfo}>
+              <h3 className={styles.gradeTitle}>Grade Analysis</h3>
+              <p className={styles.gradeSubtitle}>
+                Current Standing: {scoreData ? `Grade ${scoreData.grade}` : 'No Grade Yet'}
+              </p>
+            </div>
+            <div className={styles.gradeList}>
+              {[
+                { grade: 'A', label: 'Excellent' },
+                { grade: 'B', label: 'Good' },
+                { grade: 'C', label: 'Average' },
+                { grade: 'D', label: 'Below' },
+                { grade: 'E', label: 'Critical' },
+              ].map((item) => {
+                const isActive = scoreData ? scoreData.grade?.toUpperCase() === item.grade : false;
+                const displayLabel = isActive ? 'Current' : item.label;
+                return (
+                  <div key={item.grade} className={styles.gradeItem}>
+                    <div className={cx(styles, 'gradeCircle', isActive ? 'gradeCircleActive' : '')}>
+                      {item.grade}
+                    </div>
+                    <span className={cx(styles, 'gradeItemLabel', isActive ? 'gradeItemLabelActive' : '')}>
+                      {displayLabel}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </section>
 
         {/* ---- Missing data banner ---- */}
@@ -408,18 +439,18 @@ export default function ScorePage() {
           {history.length >= 2 ? (
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={history}>
-                <CartesianGrid stroke="rgba(70, 69, 85, 0.3)" vertical={false} />
-                <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#c7c4d8' }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 1000]} tick={{ fontSize: 12, fill: '#c7c4d8' }} axisLine={false} tickLine={false} />
+                <CartesianGrid stroke="#1A2433" vertical={false} />
+                <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#c4c5d9' }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 1000]} tick={{ fontSize: 12, fill: '#c4c5d9' }} axisLine={false} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    background: '#122131',
-                    border: '1px solid rgba(70, 69, 85, 0.4)',
+                    background: '#0A1220',
+                    border: '1px solid #1A2433',
                     borderRadius: 8,
-                    color: '#d4e4fa',
+                    color: '#dce2f2',
                   }}
                 />
-                <Line type="monotone" dataKey="score" stroke="#4f46e5" strokeWidth={2.5} dot={{ fill: '#4edea3', r: 3 }} />
+                <Line type="monotone" dataKey="score" stroke="#2e5bff" strokeWidth={2.5} dot={{ fill: '#48d9ff', r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           ) : (
