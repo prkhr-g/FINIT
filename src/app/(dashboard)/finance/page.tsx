@@ -149,7 +149,11 @@ export default function FinancePage() {
         <div className={styles.overviewCard}>
           <div className={styles.overviewCardTop}>
             <span className={styles.overviewLabel}>NET WORTH</span>
-            <span className={styles.overviewIcon}>◆</span>
+            <span className={styles.overviewIcon}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
           <span className={styles.overviewValue}>
             {loadingAll ? '—' : fmt(netWorth)}
@@ -161,7 +165,11 @@ export default function FinancePage() {
         <div className={styles.overviewCard}>
           <div className={styles.overviewCardTop}>
             <span className={styles.overviewLabel}>CASH FLOW</span>
-            <span className={styles.overviewIcon}>⇅</span>
+            <span className={styles.overviewIcon}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
           <span className={`${styles.overviewValue} ${cashFlow < 0 ? styles.negative : ''}`}>
             {loadingAll ? '—' : `${cashFlow >= 0 ? '+' : '−'}${fmt(Math.abs(cashFlow))}`}
@@ -173,7 +181,11 @@ export default function FinancePage() {
         <div className={styles.overviewCard}>
           <div className={styles.overviewCardTop}>
             <span className={styles.overviewLabel}>INSURANCE COVER</span>
-            <span className={styles.overviewIcon}>❖</span>
+            <span className={styles.overviewIcon}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
           <span className={styles.overviewValue}>{loadingAll ? '—' : fmt(coverageTotal)}</span>
           <span className={styles.overviewSub}>
@@ -183,7 +195,11 @@ export default function FinancePage() {
         <div className={styles.overviewCard}>
           <div className={styles.overviewCardTop}>
             <span className={styles.overviewLabel}>GOALS</span>
-            <span className={styles.overviewIcon}>✦</span>
+            <span className={styles.overviewIcon}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
           <span className={styles.overviewValue}>{loadingAll ? '—' : `${activeGoals} active`}</span>
           <div className={styles.overviewProgressTrack}>
