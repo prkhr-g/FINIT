@@ -1,54 +1,117 @@
+/* ============================================================
+   FINT Score — dark "Corporate Modern / Tactile Softness" theme
+   Palette + type scale sourced from the Stitch design tokens.
+   All tokens are scoped locally so this page doesn't depend on
+   the rest of the app's theme system.
+
+   Updated: cards now match the flat, solid style used on the
+   Finance page (no glass blur, no glow, thin subtle border)
+   instead of the previous frosted-glass treatment.
+   ============================================================ */
+
 .page {
-  padding-bottom: 64px;
+  --surface-container-lowest: #010f1f;
+  --surface-container-low: #0d1c2d;
+  --surface-container: #122131;
+  --surface-container-high: #1c2b3c;
+  --surface-container-highest: #273647;
+  --surface-bright: #2c3a4c;
+  --outline: #918fa1;
+  --outline-variant: #464555;
+  --on-surface: #d4e4fa;
+  --on-surface-variant: #c7c4d8;
+
+  --primary: #c3c0ff;
+  --primary-fixed-dim: #c3c0ff;
+  --primary-container: #4f46e5;
+  --on-primary: #1d00a5;
+  --on-primary-container: #dad7ff;
+
+  --secondary: #bec6e0;
+  --secondary-container: #3f465c;
+
+  --tertiary: #4edea3;
+  --tertiary-container: #006e4b;
+  --on-tertiary-container: #67f4b7;
+
+  --error: #ffb4ab;
+  --error-container: #93000a;
+
+  --font-display: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--font-display);
+  padding: 32px clamp(16px, 4vw, 32px) 64px;
+  min-height: 100%;
+  position: relative;
 }
+
+/* Ambient glow removed — Finance page cards are flat, no glow blob behind page */
+.page::before {
+  display: none;
+}
+
+/* ---- Flat card base (matches Finance page: NET WORTH / CASH FLOW / etc) ---- */
+.glassCard {
+  position: relative;
+  background: var(--surface-container-lowest); /* was --surface-container-low */
+  border: 1px solid rgba(36, 36, 156, 0.06);
+  border-radius: 1rem;
+  z-index: 1;
+}
+
+/* ---- Header ---- */
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  align-items: flex-end;
   gap: 16px;
-}
-
-.headerLeft {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 
 .title {
-  font-family: Georgia, serif;
-  font-size: 30px;
-  font-weight: 400;
-  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 48px;
+  color: var(--primary-fixed-dim);
   margin: 0;
 }
 
 .subtitle {
-  font-size: 13.5px;
-  color: var(--text-muted);
-  margin: 0;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--on-surface-variant);
+  margin: 8px 0 0;
+  max-width: 46ch;
 }
 
 .recalcBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 22px;
-  border-radius: 10px;
-  border: none;
-  background: var(--accent-blue);
-  color: #fbfaf7;
+  padding: 12px 24px;
+  background: var(--surface-container-low);
+  color: var(--primary);
+  font-weight: 700;
   font-size: 14px;
-  font-weight: 600;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .recalcBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(66, 116, 217, 0.35);
+  background: var(--surface-container);
+  transform: translateY(-1px);
 }
 
 .recalcBtn:disabled {
@@ -56,172 +119,272 @@
   cursor: not-allowed;
 }
 
+.icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  font-size: 20px;
+  display: inline-block;
+  user-select: none;
+}
+
 .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
+  border: 2px solid rgba(195, 192, 255, 0.35);
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
+  display: inline-block;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* ---- Score summary card ---- */
+/* ---- Error banner ---- */
 
-.summaryCard {
-  background: var(--bg-card);
-  border: 1px var(--border-style-card) var(--border-card);
-  border-radius: 16px;
-  padding: 36px 40px;
+.errorBanner {
+  composes: glassCard;
+  border-color: rgba(255, 180, 171, 0.3);
+  background: var(--surface-container-low);
+  padding: 16px 20px;
   display: flex;
-  align-items: center;
-  gap: 40px;
+  gap: 12px;
+  align-items: flex-start;
   margin-bottom: 24px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
-  flex-wrap: wrap;
+  color: var(--error);
+  font-size: 13.5px;
 }
 
-.summaryCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(66, 116, 217, 0.15);
+/* ---- Bento grid ---- */
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
-.scoreGauge {
-  flex-shrink: 0;
-  width: 148px;
-  height: 148px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* ---- Score gauge card ---- */
 
-html.dark .scoreGauge {
-  background: conic-gradient(var(--accent-blue) var(--fill-deg, 0deg), rgba(149, 204, 221, 0.15) var(--fill-deg, 0deg) 360deg);
-  box-shadow: 0 0 20px rgba(66, 116, 217, 0.3);
-}
-
-html:not(.dark) .scoreGauge {
-  background: conic-gradient(var(--accent-blue) var(--fill-deg, 0deg), #e5e7ef var(--fill-deg, 0deg) 360deg);
-  box-shadow: 0 4px 16px rgba(66, 116, 217, 0.15);
-}
-
-.scoreContent {
-  width: 118px;
-  height: 118px;
-  border-radius: 50%;
-  background: var(--bg-card);
+.gaugeSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-}
-.scoreGaugeFilled {
-  background: conic-gradient(var(--accent-blue) var(--fill-deg, 0deg), var(--scoregauge-track) var(--fill-deg, 0deg) 360deg);
+  text-align: center;
+  overflow: hidden;
 }
 
-
-.scoreValue {
-  font-family: 'Courier New', monospace;
-  font-size: 30px;
-  font-weight: 700;
-  color: var(--accent-label);
+@media (min-width: 1024px) {
+  .gaugeSection { grid-column: span 5; }
 }
 
-.scoreOutOf {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
+.gaugeWrap {
+  position: relative;
+  width: 240px;
+  height: 240px;
 }
 
-.summaryInfo {
-  flex: 1;
-  min-width: 220px;
+.gaugeSvg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
 }
 
-.gradeRow {
+.gaugeTrack {
+  color: var(--surface-container-highest);
+}
+
+.gaugeFill {
+  transition: stroke-dashoffset 1s ease;
+}
+
+.gaugeCenter {
+  position: absolute;
+  inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
 }
 
-.gradeBadge {
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 13px;
+.gaugeScore {
+  font-family: var(--font-display);
+  font-size: 40px;
   font-weight: 700;
-  background: rgba(66, 116, 217, 0.15);
-  color: var(--accent-blue);
+  letter-spacing: -0.02em;
+  color: var(--on-surface);
 }
 
-.riskBadge {
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 12.5px;
-  font-weight: 600;
-  background: rgba(208, 231, 230, 0.25);
-  color: var(--text-secondary);
+.gaugeOutOf {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
 }
 
-.statusLine {
-  font-family: Georgia, serif;
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin: 0 0 8px;
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  margin: 24px 0 12px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.deltaLine {
-  font-size: 13.5px;
-  color: var(--text-secondary);
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.gaugeCaption {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--on-surface-variant);
+  max-width: 30ch;
   margin: 0;
 }
 
-.deltaUp { color: var(--green); font-weight: 600; }
-.deltaDown { color: var(--red); font-weight: 600; }
+.gaugeEmpty {
+  color: var(--on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+/* Tier colors reused across gauge / badges / bars */
+.tierCritical { color: var(--error); }
+.tierWatch { color: var(--secondary); }
+.tierStable { color: var(--primary); }
+.tierExcellent { color: var(--tertiary); }
+
+.bgTierCritical { background: rgba(255, 180, 171, 0.12); border: 1px solid rgba(255, 180, 171, 0.3); }
+.bgTierWatch { background: rgba(190, 198, 224, 0.12); border: 1px solid rgba(190, 198, 224, 0.3); }
+.bgTierStable { background: rgba(195, 192, 255, 0.12); border: 1px solid rgba(195, 192, 255, 0.3); }
+.bgTierExcellent { background: rgba(78, 222, 163, 0.12); border: 1px solid rgba(78, 222, 163, 0.3); }
+
+.fillCritical { background: var(--error); }
+.fillWatch { background: var(--secondary); }
+.fillStable { background: var(--primary); }
+.fillExcellent { background: var(--tertiary); }
+
+.badgeCritical { background: rgba(147, 0, 10, 0.3); color: var(--error); }
+.badgeWatch { background: rgba(63, 70, 92, 0.5); color: var(--secondary); }
+.badgeStable { background: rgba(195, 192, 255, 0.1); color: var(--primary); }
+.badgeExcellent { background: rgba(78, 222, 163, 0.1); color: var(--tertiary); }
+
+/* ---- Insights card ---- */
+
+.insightsSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .insightsSection { grid-column: span 7; }
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--on-surface);
+  margin: 0 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.insightList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.insightItem {
+  padding: 1rem;
+  background: var(--surface-container);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  border-left: 4px solid var(--primary);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.insightItem:hover {
+  transform: translateX(4px);
+}
+
+.insightIconWrap {
+  flex-shrink: 0;
+  padding: 8px;
+  border-radius: 0.5rem;
+  background: rgba(195, 192, 255, 0.15);
+  color: var(--primary-fixed-dim);
+  display: flex;
+}
+
+.insightText {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.insightEmpty {
+  color: var(--on-surface-variant);
+  font-size: 14px;
+}
 
 /* ---- Missing data banner ---- */
 
 .missingBanner {
-  background: rgba(66, 116, 217, 0.08);
-  border: 1px dashed var(--accent-blue);
-  border-radius: 14px;
+  composes: glassCard;
+  grid-column: span 12;
+  border: 1px dashed rgba(195, 192, 255, 0.35);
+  background: var(--surface-container-low);
   padding: 18px 22px;
   display: flex;
-  align-items: flex-start;
   gap: 12px;
-  margin-bottom: 24px;
-}
-
-.missingIcon {
-  font-size: 18px;
-  flex-shrink: 0;
+  align-items: flex-start;
 }
 
 .missingText {
   font-size: 13.5px;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--on-surface-variant);
   margin: 0;
 }
 
 .missingLinks {
   display: flex;
   gap: 14px;
-  margin-top: 8px;
+  margin-top: 10px;
   flex-wrap: wrap;
 }
 
 .missingLink {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--accent-blue);
+  font-weight: 700;
+  color: var(--primary);
   text-decoration: none;
 }
 
@@ -229,100 +392,132 @@ html:not(.dark) .scoreGauge {
   text-decoration: underline;
 }
 
-/* ---- Pillars ---- */
+/* ---- Pillar breakdown ---- */
 
-.sectionTitle {
-  font-family: Georgia, serif;
-  font-size: 19px;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin: 0 0 16px;
+.pillarSection {
+  composes: glassCard;
+  grid-column: span 12;
+  overflow: hidden;
 }
 
-.pillarsCard {
-  background: var(--bg-card);
-  border: 1px var(--border-style-card) var(--border-card);
-  border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 24px;
-  transition: background-color 0.3s ease;
+.pillarHeader {
+  padding: 2rem;
+  border-bottom: 1px solid var(--outline-variant);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pillarList {
+  display: flex;
+  flex-direction: column;
 }
 
 .pillarRow {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-card);
+  display: grid;
+  grid-template-columns: minmax(140px, 2fr) minmax(120px, 4fr) 60px minmax(90px, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease;
 }
 
 .pillarRow:last-child {
   border-bottom: none;
 }
 
-.pillarTop {
+.pillarRow:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pillarNameCol {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .pillarName {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pillarWeight {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-left: 8px;
-  font-weight: 400;
-}
-
-.pillarScore {
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--on-surface-variant);
+  display: block;
 }
 
 .pillarTrack {
-  height: 8px;
-  border-radius: 100px;
-  background: var(--scoregauge-track);
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--surface-container-highest);
   overflow: hidden;
 }
 
 .pillarFill {
   height: 100%;
-  border-radius: 100px;
-  transition: width 0.5s ease;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
 }
 
-.fillWeak { background: var(--red); }
-.fillMid { background: #e8a23d; }
-.fillGood { background: var(--green); }
+.pillarScore {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.pillarBadgeWrap {
+  text-align: right;
+}
+
+.pillarBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
 .pillarTip {
+  grid-column: 1 / -1;
   font-size: 13px;
-  color: var(--text-secondary);
-  margin: 10px 0 0;
+  color: var(--on-surface-variant);
+  margin: 8px 0 0;
   padding: 10px 14px;
-  background: rgba(66, 116, 217, 0.06);
-  border-left: 2px solid var(--accent-blue);
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--primary);
   border-radius: 4px;
 }
 
-/* ---- History trend ---- */
-
-.trendCard {
-  background: var(--bg-card);
-  border: 1px var(--border-style-card) var(--border-card);
-  border-radius: 16px;
-  padding: 28px 28px 12px;
-  margin-bottom: 24px;
-  transition: transform 0.25s ease, background-color 0.3s ease;
+@media (max-width: 700px) {
+  .pillarRow {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+  }
+  .pillarBadgeWrap { text-align: left; }
+  .pillarScore { text-align: left; }
 }
 
-.trendCard:hover {
-  transform: translateY(-3px);
+/* ---- Trend / history ---- */
+
+.trendSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 2rem 2rem 1rem;
 }
 
 .chartEmpty {
@@ -331,19 +526,18 @@ html:not(.dark) .scoreGauge {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--on-surface-variant);
   font-size: 13.5px;
   padding: 0 20px;
-  border: 1px dashed var(--border-card);
-  border-radius: 12px;
+  border: 1px dashed var(--outline-variant);
+  border-radius: 0.75rem;
 }
 
 /* ---- Methodology ---- */
 
-.methodologyCard {
-  background: var(--bg-card);
-  border: 1px var(--border-style-card) var(--border-card);
-  border-radius: 16px;
+.methodologySection {
+  composes: glassCard;
+  grid-column: span 12;
   overflow: hidden;
 }
 
@@ -352,55 +546,50 @@ html:not(.dark) .scoreGauge {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 28px;
+  padding: 1.25rem 2rem;
   background: transparent;
   border: none;
   cursor: pointer;
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--on-surface);
 }
 
 .methodologyIcon {
   transition: transform 0.25s ease;
-  color: var(--accent-blue);
+  color: var(--primary);
 }
 
 .methodologyIconOpen {
   transform: rotate(180deg);
 }
-.pillarTrack {
-  height: 8px;
-  border-radius: 100px;
-  overflow: hidden;
-}
-
-.trackTint0 { background: rgba(66, 116, 217, 0.15); }   /* blue */
-.trackTint1 { background: rgba(149, 204, 221, 0.3); }   /* sky */
-.trackTint2 { background: rgba(208, 231, 230, 0.5); }   /* mist */
-.trackTint3 { background: rgba(41, 54, 129, 0.12); }    /* indigo */
-
-.pillarFill {
-  height: 100%;
-  border-radius: 100px;
-  transition: width 0.5s ease;
-}
 
 .methodologyBody {
-  padding: 0 28px 24px;
+  padding: 0 2rem 1.5rem;
   font-size: 13.5px;
   line-height: 1.7;
-  color: var(--text-secondary);
+  color: var(--on-surface-variant);
+}
+
+/* ---- Footer ---- */
+
+.footer {
+  grid-column: span 12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--outline);
+  opacity: 0.7;
+  padding-top: 8px;
 }
 
 .loading {
   padding: 80px;
   text-align: center;
-  color: var(--accent-blue);
-  font-family: 'Courier New', monospace;
+  color: var(--primary);
+  font-family: var(--font-mono);
 }
-
-@media (max-width: 700px) {
-  .summaryCard { flex-direction: column; text-align: center; }
-}
- 
