@@ -21,6 +21,8 @@ export default function DashboardLayout({
     { name: 'Settings', path: '/settings' },
   ];
 
+  const isActiveDashboard = pathname === '/dashboard' || pathname === '/';
+
   return (
     <div className={styles.container}>
       <aside className={styles.sidebar}>
@@ -41,7 +43,7 @@ export default function DashboardLayout({
           })}
         </nav>
       </aside>
-      <main className={styles.mainContent}>
+      <main className={`${styles.mainContent} ${isActiveDashboard ? styles.dashboardMainContent : ''}`}>
         {children}
       </main>
     </div>

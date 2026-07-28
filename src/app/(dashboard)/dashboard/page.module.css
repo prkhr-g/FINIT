@@ -1,18 +1,49 @@
-/* ── CSS Variables — forced LIGHT MODE ── */
+/* ── CSS Variables — Localized Light/Dark Modes ── */
 .page {
-  --accent-blue: #4175FC;
-  --accent-green: #4adc8c;
-  --ring-bg: #EFEFEF;
-  --card-bg: #FFFFFF;
-  --card-border: 1px solid #EAE3D9;
-  --text-pri: #1F2937;
-  --text-sec: #6B7280;
-  --text-lbl: #5369A8;
-  --page-bg: #FAF7F2;
+  padding: 40px 60px 80px;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.darkTheme {
+  --accent-blue: #1558c6;            /* Brand Blue */
+  --accent-green: #10b981;           /* Success green */
+  --ring-bg: rgba(21, 88, 198, 0.15);
+  --card-bg: linear-gradient(180deg, #111827 0%, #0b1221 100%);
+  --card-border: 1px solid #1a2235;  /* Dark border outline */
+  --card-top-border: 1px solid rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  --card-hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --text-pri: #ffffff;               /* Crisp white primary text */
+  --text-sec: #8b90a3;               /* Muted secondary text */
+  --text-lbl: #8b90a3;
+  --page-bg: transparent;            /* Blend with the layout */
+  --score-card-bg: linear-gradient(135deg, #3525cd 0%, #4f46e5 100%);
+  --score-card-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 
   background: var(--page-bg);
-  padding: 28px 32px;
-  min-height: 100vh;
+  color: var(--text-pri);
+}
+
+.lightTheme {
+  --accent-blue: #0f56c4;            /* Primary Blue from mikku */
+  --accent-green: #10b981;           /* Success green */
+  --ring-bg: #e9edff;                /* surface-container */
+  --card-bg: #ffffff;                /* Pure white surface */
+  --card-border: 1px solid #c3c6d5;  /* outline-variant */
+  --card-top-border: 1px solid transparent;
+  --card-shadow: 0px 4px 20px rgba(21, 27, 43, 0.05); /* diffused Deep Navy shadow */
+  --card-hover-shadow: 0px 10px 25px rgba(21, 27, 43, 0.12);
+  --text-pri: #151b2b;               /* on-surface (Deep Navy) */
+  --text-sec: #424653;               /* on-surface-variant */
+  --text-lbl: #0f56c4;               /* primary */
+  --page-bg: #faf9ff;                /* background from mikku */
+  --score-card-bg: #0f56c4;
+  --score-card-shadow: 0px 4px 12px rgba(15, 86, 196, 0.2);
+
+  background: var(--page-bg);
+  color: var(--text-pri);
 }
 
 /* ══ OVERVIEW HEADER ══ */
@@ -26,9 +57,10 @@
 }
 
 .overviewTitle {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px;
-  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--text-pri);
   margin: 0 0 4px 0;
 }
@@ -116,8 +148,16 @@
 .balanceCard {
   background: var(--card-bg);
   border: var(--card-border);
-  border-radius: 16px;
+  border-top: var(--card-top-border);
+  border-radius: 12px;
   padding: 24px 28px 16px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+.balanceCard:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
 }
 
 .balanceLabel {
@@ -147,12 +187,12 @@
 }
 
 .balanceAmount {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 36px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-pri);
   margin: 8px 0 20px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
 }
 
 /* Bar chart */
@@ -202,8 +242,16 @@
 .statCard {
   background: var(--card-bg);
   border: var(--card-border);
+  border-top: var(--card-top-border);
   border-radius: 12px;
   padding: 16px 18px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+.statCard:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
 }
 
 .statLabel {
@@ -216,10 +264,10 @@
 }
 
 .statVal {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 22px;
   color: var(--text-pri);
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
@@ -238,17 +286,25 @@
 .bottomCard {
   background: var(--card-bg);
   border: var(--card-border);
-  border-radius: 14px;
+  border-top: var(--card-top-border);
+  border-radius: 12px;
   padding: 20px 22px;
   min-height: 180px;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+.bottomCard:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
 }
 
 .cardTitle {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-pri);
   margin: 0 0 14px 0;
 }
@@ -331,8 +387,16 @@
 .activityCard {
   background: var(--card-bg);
   border: var(--card-border);
-  border-radius: 14px;
+  border-top: var(--card-top-border);
+  border-radius: 12px;
   padding: 20px 24px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+.activityCard:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
 }
 
 .activityHeader {
@@ -390,13 +454,14 @@
 .activityIcon {
   width: 34px;
   height: 34px;
-  border-radius: 8px;
-  background: #F3F4F6;
+  border-radius: 6px;
+  background: var(--ring-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   flex-shrink: 0;
+  border: 1px solid var(--card-border);
 }
 
 .activityName {
@@ -442,9 +507,17 @@
 .goalCard {
   background: var(--card-bg);
   border: var(--card-border);
-  border-radius: 14px;
+  border-top: var(--card-top-border);
+  border-radius: 12px;
   padding: 20px;
   text-align: center;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+.goalCard:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
 }
 
 .goalLabel {
@@ -473,9 +546,9 @@
 }
 
 .donutPct {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-pri);
 }
 
@@ -504,10 +577,16 @@
 
 /* ── Score Card ── */
 .scoreCard {
-  background: var(--accent-blue);
-  border-radius: 14px;
+  background: linear-gradient(135deg, #3525cd 0%, #4f46e5 100%);
+  border-radius: 12px;
   padding: 20px;
   color: #fff;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+.scoreCard:hover {
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+  transform: translateY(-2px);
 }
 
 .scoreLabel {
@@ -520,9 +599,9 @@
 }
 
 .scoreVal {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   margin-bottom: 4px;
 }
@@ -561,8 +640,16 @@
 .walletsCard {
   background: var(--card-bg);
   border: var(--card-border);
-  border-radius: 14px;
+  border-top: var(--card-top-border);
+  border-radius: 12px;
   padding: 18px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+.walletsCard:hover {
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
 }
 
 .walletsHeader {
@@ -603,9 +690,10 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 10px;
-  background: #F3F4F6;
-  color: #1F2937;
+  border-radius: 8px;
+  background: var(--ring-bg);
+  color: var(--text-pri);
+  border: 1px solid var(--card-border);
 }
 
 .walletBlue {

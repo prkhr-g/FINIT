@@ -71,3 +71,7 @@
   overflow-x: hidden;
   min-width: 0;
 }
+
+.mainContent.dashboardMainContent {
+  padding: 0;
+}
