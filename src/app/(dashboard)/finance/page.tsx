@@ -8,6 +8,11 @@ type DataMap = Record<string, FinanceEntry[]>;
 
 const fmt = (n: number) => `₹${Math.round(n).toLocaleString('en-IN')}`;
 
+// Guarantees an array no matter what the API actually returned (undefined,
+// null, a wrapped object, etc.) — this is the last line of defense so the
+// page can never crash with "X.reduce is not a function" again.
+const asArray = (v: unknown): FinanceEntry[] => (Array.isArray(v) ? v : []);
+
 function buildInitialForm(fields: FieldConfig[]) {
   const initial: Record<string, string> = {};
   fields.forEach((f) => {
@@ -34,7 +39,7 @@ export default function FinancePage() {
     const next: DataMap = {};
     PILLARS.forEach((p, i) => {
       const r = results[i];
-      next[p.key] = r.status === 'fulfilled' ? r.value : [];
+      next[p.key] = r.status === 'fulfilled' ? asArray(r.value) : [];
     });
     setData(next);
     setLoadingAll(false);
@@ -52,7 +57,7 @@ export default function FinancePage() {
     setSuccess(null);
   }, [activeKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const entries = React.useMemo(() => data[active.key] ?? [], [data, active.key]);
+  const entries = React.useMemo(() => asArray(data[active.key]), [data, active.key]);
 
   const total = React.useMemo(
     () => entries.reduce((sum, e) => sum + active.getAmount(e), 0),
@@ -60,22 +65,24 @@ export default function FinancePage() {
   );
 
   // ---- Overview strip, computed once all pillars have loaded ----
-  const assetsTotal = (data.assets ?? []).reduce((s, e) => s + (Number(e.currentValue) || 0), 0);
-  const investmentsTotal = (data.investments ?? []).reduce(
+  const assetsTotal = asArray(data.assets).reduce((s, e) => s + (Number(e.currentValue) || 0), 0);
+  const investmentsTotal = asArray(data.investments).reduce(
     (s, e) => s + (Number(e.currentPrice) || 0) * (Number(e.quantity) || 1),
     0
   );
-  const accountsTotal = (data.accounts ?? []).reduce((s, e) => s + (Number(e.currentBalance) || 0), 0);
-  const loansTotal = (data.loans ?? []).reduce((s, e) => s + (Number(e.remainingBalance) || 0), 0);
+  const accountsTotal = asArray(data.accounts).reduce((s, e) => s + (Number(e.currentBalance) || 0), 0);
+  const loansTotal = asArray(data.loans).reduce((s, e) => s + (Number(e.remainingBalance) || 0), 0);
   const netWorth = assetsTotal + investmentsTotal + accountsTotal - loansTotal;
+  const hasAnyFinanceData = assetsTotal > 0 || investmentsTotal > 0 || accountsTotal > 0 || loansTotal > 0;
 
-  const incomeTotal = (data.income ?? []).reduce((s, e) => s + (Number(e.amount) || 0), 0);
-  const expenseTotal = (data.expense ?? []).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const incomeTotal = asArray(data.income).reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const expenseTotal = asArray(data.expense).reduce((s, e) => s + (Number(e.amount) || 0), 0);
   const cashFlow = incomeTotal - expenseTotal;
+  const hasCashFlowData = incomeTotal > 0 || expenseTotal > 0;
 
-  const coverageTotal = (data.insurance ?? []).reduce((s, e) => s + (Number(e.coverageAmount) || 0), 0);
+  const coverageTotal = asArray(data.insurance).reduce((s, e) => s + (Number(e.coverageAmount) || 0), 0);
 
-  const goalsList = data.goals ?? [];
+  const goalsList = asArray(data.goals);
   const activeGoals = goalsList.filter((g) => (g.status ?? 'ACTIVE') === 'ACTIVE').length;
   const goalsTarget = goalsList.reduce((s, e) => s + (Number(e.targetAmount) || 0), 0);
   const goalsSaved = goalsList.reduce((s, e) => s + (Number(e.currentAmount) || 0), 0);
@@ -117,7 +124,7 @@ export default function FinancePage() {
   };
 
   const handleDelete = async (id: string) => {
-    const prev = data[active.key] ?? [];
+    const prev = asArray(data[active.key]);
     setData((d) => ({ ...d, [active.key]: prev.filter((e) => e.id !== id) }));
     try {
       await active.remove(id);
@@ -131,7 +138,7 @@ export default function FinancePage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Finance</h1>
+          <h1 className={styles.title}>Finance Command Center</h1>
           <p className={styles.subtitle}>
             One place for every pillar of your money — this data powers your FINT Score.
           </p>
@@ -140,34 +147,50 @@ export default function FinancePage() {
 
       <div className={styles.overviewGrid}>
         <div className={styles.overviewCard}>
-          <span className={styles.overviewLabel}>NET WORTH</span>
+          <div className={styles.overviewCardTop}>
+            <span className={styles.overviewLabel}>NET WORTH</span>
+            <span className={styles.overviewIcon}>◆</span>
+          </div>
           <span className={styles.overviewValue}>
             {loadingAll ? '—' : fmt(netWorth)}
           </span>
-          <span className={styles.overviewSub}>Accounts + assets + investments − loans</span>
+          <span className={styles.overviewSub}>
+            {loadingAll ? 'Loading…' : hasAnyFinanceData ? 'Accounts + assets + investments − loans' : 'No accounts, assets, or loans yet'}
+          </span>
         </div>
         <div className={styles.overviewCard}>
-          <span className={styles.overviewLabel}>CASH FLOW</span>
+          <div className={styles.overviewCardTop}>
+            <span className={styles.overviewLabel}>CASH FLOW</span>
+            <span className={styles.overviewIcon}>⇅</span>
+          </div>
           <span className={`${styles.overviewValue} ${cashFlow < 0 ? styles.negative : ''}`}>
             {loadingAll ? '—' : `${cashFlow >= 0 ? '+' : '−'}${fmt(Math.abs(cashFlow))}`}
           </span>
           <span className={styles.overviewSub}>
-            {loadingAll ? 'Loading…' : `${fmt(incomeTotal)} in · ${fmt(expenseTotal)} out`}
+            {loadingAll ? 'Loading…' : hasCashFlowData ? `${fmt(incomeTotal)} in · ${fmt(expenseTotal)} out` : 'No income or expenses logged yet'}
           </span>
         </div>
         <div className={styles.overviewCard}>
-          <span className={styles.overviewLabel}>INSURANCE COVER</span>
+          <div className={styles.overviewCardTop}>
+            <span className={styles.overviewLabel}>INSURANCE COVER</span>
+            <span className={styles.overviewIcon}>❖</span>
+          </div>
           <span className={styles.overviewValue}>{loadingAll ? '—' : fmt(coverageTotal)}</span>
-          <span className={styles.overviewSub}>{(data.insurance ?? []).length} active {(data.insurance ?? []).length === 1 ? 'policy' : 'policies'}</span>
+          <span className={styles.overviewSub}>
+            {loadingAll ? 'Loading…' : `${asArray(data.insurance).length} active ${asArray(data.insurance).length === 1 ? 'policy' : 'policies'}`}
+          </span>
         </div>
         <div className={styles.overviewCard}>
-          <span className={styles.overviewLabel}>GOALS</span>
+          <div className={styles.overviewCardTop}>
+            <span className={styles.overviewLabel}>GOALS</span>
+            <span className={styles.overviewIcon}>✦</span>
+          </div>
           <span className={styles.overviewValue}>{loadingAll ? '—' : `${activeGoals} active`}</span>
           <div className={styles.overviewProgressTrack}>
             <div className={styles.overviewProgressFill} style={{ width: `${Math.round(goalsProgress * 100)}%` }} />
           </div>
           <span className={styles.overviewSub}>
-            {loadingAll ? 'Loading…' : `${fmt(goalsSaved)} of ${fmt(goalsTarget)} saved`}
+            {loadingAll ? 'Loading…' : goalsTarget > 0 ? `${fmt(goalsSaved)} of ${fmt(goalsTarget)} saved` : 'No goals set yet'}
           </span>
         </div>
       </div>

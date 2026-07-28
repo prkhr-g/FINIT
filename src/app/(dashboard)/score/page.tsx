@@ -21,14 +21,69 @@ const PILLAR_LABELS: Record<string, string> = {
   behaviour: 'Financial Behaviour',
 };
 
-function fillClass(score: number, styles: Record<string, string>) {
-  if (score < 50) return styles.fillWeak;
-  if (score < 75) return styles.fillMid;
-  return styles.fillGood;
+// Material Symbols icon per pillar
+const PILLAR_ICONS: Record<string, string> = {
+  income: 'account_balance',
+  cashflow: 'water_drop',
+  debt: 'credit_card_off',
+  credit: 'credit_score',
+  savings: 'savings',
+  emergencyFund: 'emergency',
+  insurance: 'shield',
+  investments: 'trending_up',
+  retirement: 'event_available',
+  behaviour: 'psychology',
+};
+
+// Insight card accent icons, cycled per recommendation
+const INSIGHT_ICONS = ['trending_down', 'savings', 'shield', 'lightbulb', 'bolt'];
+
+type Tier = 'critical' | 'watch' | 'stable' | 'excellent';
+
+function tierFor(score: number): Tier {
+  if (score < 50) return 'critical';
+  if (score < 75) return 'watch';
+  if (score < 90) return 'stable';
+  return 'excellent';
 }
 
-function tintClass(index: number, styles: Record<string, string>) {
-  return styles[`trackTint${index % 4}`];
+const TIER_LABEL: Record<Tier, string> = {
+  critical: 'CRITICAL',
+  watch: 'NEEDS ATTENTION',
+  stable: 'STABLE',
+  excellent: 'EXCELLENT',
+};
+
+const TIER_TEXT_CLASS: Record<Tier, string> = {
+  critical: 'tierCritical',
+  watch: 'tierWatch',
+  stable: 'tierStable',
+  excellent: 'tierExcellent',
+};
+
+const TIER_BG_CLASS: Record<Tier, string> = {
+  critical: 'bgTierCritical',
+  watch: 'bgTierWatch',
+  stable: 'bgTierStable',
+  excellent: 'bgTierExcellent',
+};
+
+const TIER_FILL_CLASS: Record<Tier, string> = {
+  critical: 'fillCritical',
+  watch: 'fillWatch',
+  stable: 'fillStable',
+  excellent: 'fillExcellent',
+};
+
+const TIER_BADGE_CLASS: Record<Tier, string> = {
+  critical: 'badgeCritical',
+  watch: 'badgeWatch',
+  stable: 'badgeStable',
+  excellent: 'badgeExcellent',
+};
+
+function cx(styles: Record<string, string>, ...keys: string[]) {
+  return keys.map((k) => styles[k]).filter(Boolean).join(' ');
 }
 
 export default function ScorePage() {
@@ -101,7 +156,12 @@ export default function ScorePage() {
   const pillars = scoreData?.factors ?? [];
   const sortedPillars = [...pillars].sort((a, b) => a.score - b.score);
 
-  const fillDeg = scoreData ? (scoreData.score / 1000) * 360 : 0;
+  // Gauge geometry — score is out of 1000, mapped onto a 0-100 arc
+  const RADIUS = 45;
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+  const pct = scoreData ? Math.min(Math.max(scoreData.score / 1000, 0), 1) : 0;
+  const dashOffset = CIRCUMFERENCE * (1 - pct);
+  const overallTier = scoreData ? tierFor(scoreData.score / 10) : 'watch';
 
   // Delta: score now vs previous history entry
   const prevScore = history.length >= 2 ? history[history.length - 2].score : null;
@@ -116,203 +176,294 @@ export default function ScorePage() {
     }));
   const hasMissingData = missingAreas.length > 0;
 
+  const insights = scoreData?.recommendations ?? [];
+
   return (
     <div className={styles.page}>
+      {/* Fonts used by this design: Inter, JetBrains Mono, Material Symbols */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      />
+
       <div className={styles.header}>
-        <div className={styles.headerLeft}>
+        <div>
           <h1 className={styles.title}>FINT Score</h1>
-          <p className={styles.subtitle}>Evaluate your financial health quotient.</p>
+          <p className={styles.subtitle}>
+            Quantitative evaluation of your global financial stability and trajectory.
+          </p>
         </div>
         <button
           className={styles.recalcBtn}
           onClick={handleRecalculate}
           disabled={recalculating}
         >
-          {recalculating && <span className={styles.spinner} />}
+          {recalculating ? (
+            <span className={styles.spinner} />
+          ) : (
+            <span className={styles.icon}>refresh</span>
+          )}
           {recalculating ? 'Recalculating...' : 'Recalculate Score'}
         </button>
       </div>
 
       {error && (
-        <div className={styles.missingBanner} style={{ borderColor: 'var(--red, #ef4444)' }}>
-          <span className={styles.missingIcon}>✕</span>
+        <div className={styles.errorBanner}>
+          <span className={styles.icon}>error</span>
           <p className={styles.missingText}>{error}</p>
         </div>
       )}
 
-      {/* ---- Summary ---- */}
-      <div className={styles.summaryCard}>
-        <div
-          className={styles.scoreGauge}
-          style={{ ['--fill-deg' as string]: `${fillDeg}deg` }}
-        >
-          <div className={styles.scoreContent}>
-            <span className={styles.scoreValue}>{scoreData ? scoreData.score : '—'}</span>
-            <span className={styles.scoreOutOf}>
-              OF {scoreData ? 1000 : 1000}
-            </span>
-          </div>
-        </div>
-        <div className={styles.summaryInfo}>
-          <div className={styles.gradeRow}>
-            {scoreData ? (
-              <>
-                <span className={styles.gradeBadge}>GRADE {scoreData.grade}</span>
-                <span className={styles.riskBadge}>Risk: {scoreData.risk}</span>
-              </>
-            ) : (
-              <span className={styles.riskBadge}>No data yet</span>
-            )}
-          </div>
-          <h2 className={styles.statusLine}>
-            {scoreData
-              ? scoreData.recommendations?.[0] ?? 'Score calculated successfully.'
-              : 'Score not calculated yet'}
-          </h2>
-          <p className={styles.deltaLine}>
-            {scoreData && delta !== null ? (
-              <>
-                <span className={delta >= 0 ? styles.deltaUp : styles.deltaDown}>
-                  {delta >= 0 ? '↑' : '↓'} {Math.abs(delta)} points
-                </span>{' '}
-                since last calculation
-              </>
-            ) : scoreData ? (
-              `Calculated ${new Date(scoreData.calculatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}`
-            ) : (
-              'Add your finance data and hit Recalculate to generate your first score.'
-            )}
-          </p>
-        </div>
-      </div>
-
-      {/* ---- Missing data banner ---- */}
-      {hasMissingData && (
-        <div className={styles.missingBanner}>
-          <span className={styles.missingIcon}>⚠</span>
-          <div>
-            <p className={styles.missingText}>
-              Your score reflects missing data, not necessarily financial distress —
-              a few pillars haven&apos;t been filled in yet.
-            </p>
-            <div className={styles.missingLinks}>
-              {missingAreas.map((area) => (
-                <Link key={area.label} href={area.href} className={styles.missingLink}>
-                  Add {area.label} →
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ---- Pillar breakdown ---- */}
-      <div className={styles.pillarsCard}>
-        <h2 className={styles.sectionTitle}>Pillar breakdown</h2>
-        {sortedPillars.length ? (
-          sortedPillars.map((pillar, index) => (
-            <div key={pillar.pillar} className={styles.pillarRow}>
-              <div className={styles.pillarTop}>
-                <div>
-                  <span className={styles.pillarName}>
-                    {PILLAR_LABELS[pillar.pillar] ?? pillar.pillar}
-                  </span>
-                  <span className={styles.pillarWeight}>· {pillar.weight}% weight</span>
-                </div>
-                <span
-                  className={styles.pillarScore}
-                  style={{
-                    color:
-                      pillar.score < 50 ? 'var(--red)'
-                      : pillar.score < 75 ? '#e8a23d'
-                      : 'var(--green)',
-                  }}
-                >
-                  {pillar.score}/100
-                </span>
-              </div>
-              <div className={`${styles.pillarTrack} ${tintClass(index, styles)}`}>
-                <div
-                  className={`${styles.pillarFill} ${fillClass(pillar.score, styles)}`}
-                  style={{ width: `${pillar.score}%` }}
+      <div className={styles.bentoGrid}>
+        {/* ---- Score gauge ---- */}
+        <section className={styles.gaugeSection}>
+          <div className={styles.gaugeWrap}>
+            <svg className={styles.gaugeSvg} viewBox="0 0 100 100">
+              <circle
+                className={styles.gaugeTrack}
+                cx="50" cy="50" r={RADIUS}
+                fill="none" stroke="currentColor" strokeWidth="8"
+              />
+              {scoreData && (
+                <circle
+                  className={styles.gaugeFill}
+                  cx="50" cy="50" r={RADIUS}
+                  fill="none"
+                  stroke="url(#fintGaugeGradient)"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={CIRCUMFERENCE}
+                  strokeDashoffset={dashOffset}
                 />
-              </div>
-              {pillar.remarks && (
-                <p className={styles.pillarTip}>{pillar.remarks}</p>
               )}
+              <defs>
+                <linearGradient id="fintGaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#4f46e5" />
+                  <stop offset="100%" stopColor="#4edea3" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className={styles.gaugeCenter}>
+              <span className={styles.gaugeScore}>{scoreData ? scoreData.score : '—'}</span>
+              <span className={styles.gaugeOutOf}>of 1000</span>
             </div>
-          ))
-        ) : (
-          Object.entries(PILLAR_LABELS).map(([key, name], index) => (
-            <div key={key} className={styles.pillarRow}>
-              <div className={styles.pillarTop}>
-                <span className={styles.pillarName}>{name}</span>
-                <span className={styles.pillarScore} style={{ color: 'var(--text-muted)' }}>
-                  —
+          </div>
+
+          {scoreData ? (
+            <>
+              <div className={cx(styles, 'statusPill', TIER_BG_CLASS[overallTier])}>
+                <span
+                  className={styles.statusDot}
+                  style={{ background: `var(--${overallTier === 'critical' ? 'error' : overallTier === 'watch' ? 'secondary' : overallTier === 'stable' ? 'primary' : 'tertiary'})` }}
+                />
+                <span className={styles[TIER_TEXT_CLASS[overallTier]]}>
+                  GRADE {scoreData.grade} · Risk: {scoreData.risk}
                 </span>
               </div>
-              <div className={`${styles.pillarTrack} ${tintClass(index, styles)}`}>
-                <div className={styles.pillarFill} style={{ width: '0%' }} />
+              <p className={styles.gaugeCaption}>
+                {delta !== null ? (
+                  <>
+                    Your score has {delta >= 0 ? 'increased' : 'decreased'} by{' '}
+                    <span className={styles[delta >= 0 ? 'tierExcellent' : 'tierCritical']}>
+                      {delta >= 0 ? '+' : ''}{delta} points
+                    </span>{' '}
+                    since your last calculation.
+                  </>
+                ) : (
+                  scoreData.recommendations?.[0] ?? 'Score calculated successfully.'
+                )}
+              </p>
+            </>
+          ) : (
+            <p className={styles.gaugeEmpty}>
+              Add your finance data and hit Recalculate to generate your first score.
+            </p>
+          )}
+        </section>
+
+        {/* ---- Improvement Insights ---- */}
+        <section className={styles.insightsSection}>
+          <h4 className={styles.sectionTitle}>
+            <span className={styles.icon} style={{ color: 'var(--primary)' }}>lightbulb</span>
+            Improvement Insights
+          </h4>
+          {insights.length ? (
+            <ul className={styles.insightList}>
+              {insights.map((rec, i) => {
+                const icon = INSIGHT_ICONS[i % INSIGHT_ICONS.length];
+                const tiers: Tier[] = ['stable', 'excellent', 'watch', 'critical'];
+                const tier = tiers[i % tiers.length];
+                return (
+                  <li
+                    key={i}
+                    className={styles.insightItem}
+                    style={{ borderLeftColor: `var(--${tier === 'critical' ? 'error' : tier === 'watch' ? 'secondary' : tier === 'stable' ? 'primary' : 'tertiary'})` }}
+                  >
+                    <span className={styles.insightIconWrap}>
+                      <span className={styles.icon}>{icon}</span>
+                    </span>
+                    <p className={styles.insightText}>{rec}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className={styles.insightEmpty}>
+              Recommendations will appear here once your score has been calculated.
+            </p>
+          )}
+        </section>
+
+        {/* ---- Missing data banner ---- */}
+        {hasMissingData && (
+          <div className={styles.missingBanner}>
+            <span className={styles.icon} style={{ color: 'var(--primary)' }}>info</span>
+            <div>
+              <p className={styles.missingText}>
+                Your score reflects missing data, not necessarily financial distress —
+                a few pillars haven&apos;t been filled in yet.
+              </p>
+              <div className={styles.missingLinks}>
+                {missingAreas.map((area) => (
+                  <Link key={area.label} href={area.href} className={styles.missingLink}>
+                    Add {area.label} →
+                  </Link>
+                ))}
               </div>
             </div>
-          ))
-        )}
-      </div>
-
-      {/* ---- AI Recommendations ---- */}
-      {scoreData?.recommendations && scoreData.recommendations.length > 1 && (
-        <div className={styles.pillarsCard} style={{ marginTop: '16px' }}>
-          <h2 className={styles.sectionTitle}>Recommendations</h2>
-          <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {scoreData.recommendations.map((r, i) => (
-              <li key={i} style={{ fontSize: '14px', lineHeight: '1.6' }}>{r}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* ---- History trend ---- */}
-      <div className={styles.trendCard}>
-        <h2 className={styles.sectionTitle}>Score history</h2>
-        {history.length >= 2 ? (
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={history}>
-              <CartesianGrid stroke="var(--border-card)" vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 12, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-              <YAxis domain={[0, 1000]} tick={{ fontSize: 12, fill: 'var(--text-muted)' }} axisLine={false} tickLine={false} />
-              <Tooltip />
-              <Line type="monotone" dataKey="score" stroke="#4274d9" strokeWidth={2.5} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className={styles.chartEmpty}>
-            {history.length === 1
-              ? 'Recalculate your score a few more times to see your trend here.'
-              : 'Recalculate your score a few times over the coming weeks to see your trend here.'}
           </div>
         )}
-      </div>
 
-      {/* ---- Methodology ---- */}
-      <div className={styles.methodologyCard}>
-        <button
-          className={styles.methodologyToggle}
-          onClick={() => setMethodologyOpen((v) => !v)}
-        >
-          How is this calculated?
-          <span className={`${styles.methodologyIcon} ${methodologyOpen ? styles.methodologyIconOpen : ''}`}>
-            ▾
-          </span>
-        </button>
-        {methodologyOpen && (
-          <div className={styles.methodologyBody}>
-            Your FINT Score is calculated across 10 weighted pillars — Income Stability, Cash Flow,
-            Debt Health, Credit Health, Savings, Emergency Fund, Insurance, Investments, Retirement,
-            and Financial Behaviour. Some pillars use proxy signals rather than real bureau data
-            (e.g. no live credit bureau integration yet, and retirement projections don&apos;t account
-            for compounding). Scores recompute monthly, or on demand via Recalculate.
+        {/* ---- Pillar breakdown ---- */}
+        <section className={styles.pillarSection}>
+          <div className={styles.pillarHeader}>
+            <h4 className={styles.sectionTitle} style={{ margin: 0 }}>Pillar Breakdown</h4>
           </div>
-        )}
+          <div className={styles.pillarList}>
+            {sortedPillars.length ? (
+              sortedPillars.map((pillar) => {
+                const tier = tierFor(pillar.score);
+                return (
+                  <div key={pillar.pillar} className={styles.pillarRow}>
+                    <div className={styles.pillarNameCol}>
+                      <span className={styles.icon} style={{ color: 'var(--outline)' }}>
+                        {PILLAR_ICONS[pillar.pillar] ?? 'radio_button_unchecked'}
+                      </span>
+                      <span>
+                        <span className={styles.pillarName}>
+                          {PILLAR_LABELS[pillar.pillar] ?? pillar.pillar}
+                        </span>
+                        <span className={styles.pillarWeight}>{pillar.weight}% weight</span>
+                      </span>
+                    </div>
+                    <div className={styles.pillarTrack}>
+                      <div
+                        className={cx(styles, 'pillarFill', TIER_FILL_CLASS[tier])}
+                        style={{ width: `${pillar.score}%` }}
+                      />
+                    </div>
+                    <div className={cx(styles, 'pillarScore', TIER_TEXT_CLASS[tier])}>
+                      {pillar.score}
+                    </div>
+                    <div className={styles.pillarBadgeWrap}>
+                      <span className={cx(styles, 'pillarBadge', TIER_BADGE_CLASS[tier])}>
+                        {TIER_LABEL[tier]}
+                      </span>
+                    </div>
+                    {pillar.remarks && (
+                      <p className={styles.pillarTip}>{pillar.remarks}</p>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              Object.entries(PILLAR_LABELS).map(([key, name]) => (
+                <div key={key} className={styles.pillarRow}>
+                  <div className={styles.pillarNameCol}>
+                    <span className={styles.icon} style={{ color: 'var(--outline)' }}>
+                      {PILLAR_ICONS[key] ?? 'radio_button_unchecked'}
+                    </span>
+                    <span>
+                      <span className={styles.pillarName}>{name}</span>
+                    </span>
+                  </div>
+                  <div className={styles.pillarTrack}>
+                    <div className={styles.pillarFill} style={{ width: '0%' }} />
+                  </div>
+                  <div className={styles.pillarScore} style={{ color: 'var(--on-surface-variant)' }}>—</div>
+                  <div className={styles.pillarBadgeWrap} />
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* ---- History trend ---- */}
+        <section className={styles.trendSection}>
+          <h4 className={styles.sectionTitle}>Score History</h4>
+          {history.length >= 2 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <LineChart data={history}>
+                <CartesianGrid stroke="rgba(70, 69, 85, 0.3)" vertical={false} />
+                <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#c7c4d8' }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 1000]} tick={{ fontSize: 12, fill: '#c7c4d8' }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    background: '#122131',
+                    border: '1px solid rgba(70, 69, 85, 0.4)',
+                    borderRadius: 8,
+                    color: '#d4e4fa',
+                  }}
+                />
+                <Line type="monotone" dataKey="score" stroke="#4f46e5" strokeWidth={2.5} dot={{ fill: '#4edea3', r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className={styles.chartEmpty}>
+              {history.length === 1
+                ? 'Recalculate your score a few more times to see your trend here.'
+                : 'Recalculate your score a few times over the coming weeks to see your trend here.'}
+            </div>
+          )}
+        </section>
+
+        {/* ---- Methodology ---- */}
+        <section className={styles.methodologySection}>
+          <button
+            className={styles.methodologyToggle}
+            onClick={() => setMethodologyOpen((v) => !v)}
+          >
+            How is this calculated?
+            <span className={`${styles.methodologyIcon} ${methodologyOpen ? styles.methodologyIconOpen : ''}`}>
+              ▾
+            </span>
+          </button>
+          {methodologyOpen && (
+            <div className={styles.methodologyBody}>
+              Your FINT Score is calculated across 10 weighted pillars — Income Stability, Cash Flow,
+              Debt Health, Credit Health, Savings, Emergency Fund, Insurance, Investments, Retirement,
+              and Financial Behaviour. Some pillars use proxy signals rather than real bureau data
+              (e.g. no live credit bureau integration yet, and retirement projections don&apos;t account
+              for compounding). Scores recompute monthly, or on demand via Recalculate.
+            </div>
+          )}
+        </section>
+
+        {/* ---- Footer meta ---- */}
+        <footer className={styles.footer}>
+          <p>
+            {scoreData
+              ? `Last recalculation: ${new Date(scoreData.calculatedAt).toLocaleString('en-IN', {
+                  day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',
+                })}`
+              : 'No recalculation yet'}
+          </p>
+          <p>FINT Financial Ecosystem · Encrypted environment</p>
+        </footer>
       </div>
     </div>
   );
