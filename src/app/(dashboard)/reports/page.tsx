@@ -85,12 +85,7 @@ export default function ReportsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Reports</h1>
-          <p className={styles.subtitle}>
-            Asset appreciation vs. liability amortization, yield, and cash flow — one view of portfolio performance.
-          </p>
-        </div>
+        <h1 className={styles.title}>Reports</h1>
       </div>
 
       <div className={styles.content}>

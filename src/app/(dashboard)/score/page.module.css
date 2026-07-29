@@ -34,7 +34,7 @@
   --error-container: #93000a;
   --on-error-container: #ffdad6;
 
-  --font-display: 'Inter', sans-serif;
+  --font-display: var(--font-roboto), sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Custom card/progress rules from code.html style block */
@@ -46,7 +46,7 @@
   background: transparent;
   color: var(--on-surface);
   font-family: var(--font-display);
-  padding: 32px clamp(16px, 4vw, 32px) 64px;
+  padding: 0;
   min-height: 100%;
   position: relative;
 }
@@ -73,7 +73,7 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 16px;
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
@@ -86,14 +86,14 @@
   letter-spacing: -0.02em;
   line-height: 36px;
   color: #ffffff;
-  margin: 0;
+  margin: 0 0 4px;
 }
 
 .subtitle {
   font-size: 13px;
   line-height: 20px;
   color: var(--on-surface-variant);
-  margin: 4px 0 0;
+  margin: 0;
   max-width: 100%;
 }
 

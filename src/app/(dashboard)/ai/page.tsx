@@ -8,10 +8,7 @@ export default function AiPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">FINT AI Assistant</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Chat with our LLM-backed personalized financial advisor.</p>
-        </div>
+        <h1 className="text-[28px] font-bold tracking-[-0.02em] text-slate-900 dark:text-white">FINT AI Assistant</h1>
         <Button variant="primary">
           Refresh Data
         </Button>
@@ -21,7 +18,6 @@ export default function AiPage() {
         <Card hoverable>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Net Worth</span>
-            <span className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 text-sm">📈</span>
           </div>
           <div className="mt-4">
             <span className="text-3xl font-bold text-slate-900 dark:text-white">₹12,48,500</span>
@@ -32,7 +28,6 @@ export default function AiPage() {
         <Card hoverable>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Savings</span>
-            <span className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-sm">💰</span>
           </div>
           <div className="mt-4">
             <span className="text-3xl font-bold text-slate-900 dark:text-white">₹45,200</span>
@@ -43,7 +38,6 @@ export default function AiPage() {
         <Card hoverable>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Monthly Expenses</span>
-            <span className="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 text-sm">📉</span>
           </div>
           <div className="mt-4">
             <span className="text-3xl font-bold text-slate-900 dark:text-white">₹28,400</span>
@@ -54,7 +48,6 @@ export default function AiPage() {
         <Card hoverable>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-slate-500 dark:text-slate-400">FINT Score</span>
-            <span className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-sm">💯</span>
           </div>
           <div className="mt-4">
             <span className="text-3xl font-bold text-slate-900 dark:text-white">765 / 900</span>

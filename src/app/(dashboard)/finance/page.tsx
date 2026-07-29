@@ -137,12 +137,7 @@ export default function FinancePage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Finance Command Center</h1>
-          <p className={styles.subtitle}>
-            One place for every pillar of your money — this data powers your FINT Score.
-          </p>
-        </div>
+        <h1 className={styles.title}>Finance Command Center</h1>
       </div>
 
       <div className={styles.overviewGrid}>

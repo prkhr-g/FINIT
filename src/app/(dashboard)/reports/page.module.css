@@ -8,49 +8,49 @@
    ============================================================ */
 
 .page {
-  --surface-dim: #0d141e;
-  --surface-bright: #333945;
+  --surface-dim: #080e1a;
+  --surface-bright: #1f2937;
   --surface-container-lowest: #080e19;
-  --surface-container-low: #151c26;
-  --surface-container: #19202b;
-  --surface-container-high: #242a35;
-  --surface-container-highest: #2e3540;
-  --on-surface: #dce2f2;
-  --on-surface-variant: #c4c5d9;
-  --outline: #8e90a2;
-  --outline-variant: #434656;
+  --surface-container-low: #0d1526;
+  --surface-container: #111827;
+  --surface-container-high: #1a2235;
+  --surface-container-highest: #243049;
+  --on-surface: #ffffff;
+  --on-surface-variant: #8b90a3;
+  --outline: #4b5563;
+  --outline-variant: #1a2235;
 
-  --primary: #b8c3ff;
-  --primary-fixed-dim: #b8c3ff;
-  --primary-container: #2e5bff;
-  --on-primary: #002388;
-  --on-primary-container: #efefff;
+  --primary: #3b82f6;
+  --primary-fixed-dim: #3b82f6;
+  --primary-container: #1558c6;
+  --on-primary: #ffffff;
+  --on-primary-container: #ffffff;
 
-  --secondary: #48d9ff;
-  --secondary-container: #00bee3;
-  --on-secondary-container: #004858;
+  --secondary: #3b82f6;
+  --secondary-container: #1d4ed8;
+  --on-secondary-container: #ffffff;
 
-  --tertiary: #ffb59b;
-  --tertiary-container: #c24100;
-  --on-tertiary-container: #ffece6;
+  --tertiary: #10b981;
+  --tertiary-container: #064e3b;
+  --on-tertiary-container: #ffffff;
 
-  --error: #ffb4ab;
-  --error-container: #93000a;
-  --on-error-container: #ffdad6;
+  --error: #ef4444;
+  --error-container: #7f1d1d;
+  --on-error-container: #ffffff;
 
-  --font-display: 'Inter', sans-serif;
+  --font-display: var(--font-roboto), sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Custom card/progress rules from code.html style block */
-  --card-bg: #0A1220;
-  --card-border: 1px solid #1A2433;
-  --progress-track: #1A2433;
-  --progress-fill: #48d9ff;
+  --card-bg: linear-gradient(180deg, #111827 0%, #0b1221 100%);
+  --card-border: 1px solid #1a2235;
+  --progress-track: #1a2235;
+  --progress-fill: #1558c6;
 
   background: transparent;
   color: var(--on-surface);
   font-family: var(--font-display);
-  padding: 32px clamp(16px, 4vw, 32px) 64px;
+  padding: 0;
   min-height: 100%;
   position: relative;
 }
@@ -77,7 +77,7 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 16px;
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
@@ -90,14 +90,14 @@
   letter-spacing: -0.02em;
   line-height: 36px;
   color: #ffffff;
-  margin: 0;
+  margin: 0 0 4px;
 }
 
 .subtitle {
   font-size: 13px;
   line-height: 20px;
   color: var(--on-surface-variant);
-  margin: 4px 0 0;
+  margin: 0;
   max-width: 100%;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .recalcBtn:hover:not(:disabled) {
-  background: #1e4bdf;
+  background: #1e3a8a;
   transform: translateY(-1px);
 }
 

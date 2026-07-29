@@ -81,9 +81,6 @@ export default function SettingsPage() {
     <form className={styles.page} onSubmit={handleSave}>
       <div className={styles.header}>
         <h1 className={styles.title}>Account Settings</h1>
-        <p className={styles.subtitle}>
-          Manage your profile, regional preferences, and security protocols.
-        </p>
       </div>
 
       {/* ── Profile Identity ── */}

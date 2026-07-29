@@ -43,7 +43,7 @@ export default function DashboardLayout({
           })}
         </nav>
       </aside>
-      <main className={`${styles.mainContent} ${isActiveDashboard ? styles.dashboardMainContent : ''}`}>
+      <main className={styles.mainContent}>
         {children}
       </main>
     </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -16,6 +16,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+});
+
 export const metadata: Metadata = {
   title: "FINT - Scalable Wealth & Financial Intelligence",
   description: "Secure, AI-powered financial management and planning platform.",
@@ -28,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased min-h-screen`}>
         <QueryProvider>
           <ThemeProvider>
             <AuthProvider>
