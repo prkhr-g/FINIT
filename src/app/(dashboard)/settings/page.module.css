@@ -1,0 +1,474 @@
+/* ============================================================
+   FINT — Account Settings page
+   Self-contained token set (matches the palette used across the
+   Dashboard / Finance / Reports pages) plus the panel, form-field,
+   and settings-row classes this page needs. The app shell already
+   renders the sidebar and topbar, so nothing here duplicates that.
+   ============================================================ */
+
+.page {
+  --surface: #051424;
+  --surface-container-lowest: #010f1f;
+  --surface-container-low: #0d1c2d;
+  --surface-container: #122131;
+  --surface-container-high: #1c2b3c;
+  --surface-container-highest: #273647;
+  --on-surface: #d4e4fa;
+  --on-surface-variant: #c7c4d8;
+  --outline: #918fa1;
+  --outline-variant: #464555;
+
+  --primary: #c3c0ff;
+  --on-primary: #1d00a5;
+  --primary-container: #4f46e5;
+  --on-primary-container: #dad7ff;
+
+  --secondary: #bec6e0;
+  --secondary-container: #3f465c;
+  --on-secondary-container: #adb4ce;
+
+  --tertiary: #4edea3;
+  --tertiary-container: #006e4b;
+  --on-tertiary-container: #67f4b7;
+
+  --error: #ffb4ab;
+  --error-container: #93000a;
+
+  --font-display: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  color: var(--on-surface);
+  font-family: var(--font-display);
+}
+
+/* ---- Header ---- */
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--on-surface);
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+/* ---- Sections ---- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sectionIcon {
+  color: var(--primary);
+  display: flex;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--on-surface);
+  margin: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(70, 69, 85, 0.3);
+  margin: 0 0 3rem;
+}
+
+/* ---- Glass panel ---- */
+
+.panel {
+  background: rgba(18, 33, 49, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(70, 69, 85, 0.5);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ---- Profile identity ---- */
+
+.profileRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .profileRow {
+    flex-direction: row;
+  }
+}
+
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 4px solid var(--surface-container-highest);
+  object-fit: cover;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+}
+
+.avatarPlaceholder {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 4px solid var(--surface-container-highest);
+  background: var(--surface-container-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--on-surface-variant);
+}
+
+.avatarUploadBtn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.avatarUploadBtn:hover {
+  transform: scale(1.1);
+}
+
+.profileFields {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ---- Form fields (shared by profile / localization) ---- */
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .formGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--on-surface-variant);
+  padding: 0 4px;
+}
+
+.input,
+.select {
+  width: 100%;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  border-radius: 0.5rem;
+  padding: 10px 16px;
+  color: var(--on-surface);
+  font-size: 14px;
+  font-family: var(--font-display);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--on-surface-variant);
+  opacity: 0.5;
+}
+
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(195, 192, 255, 0.15);
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23c7c4d8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* ---- Info box ---- */
+
+.infoBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(39, 54, 71, 0.4);
+  border-radius: 0.5rem;
+}
+
+.infoIcon {
+  color: var(--tertiary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.infoText {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+/* ---- Settings rows (security section) ---- */
+
+.settingsRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .settingsRow {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.rowInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rowTitleLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rowTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin: 0;
+}
+
+.rowNote {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.rowDivider {
+  height: 1px;
+  background: rgba(70, 69, 85, 0.2);
+  width: 100%;
+}
+
+/* ---- Badges ---- */
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.badgeActive {
+  background: var(--tertiary-container);
+  color: var(--on-tertiary-container);
+}
+
+.badgeInactive {
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+
+/* ---- Buttons ---- */
+
+.btnOutline {
+  padding: 8px 24px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--on-surface);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btnOutline:hover {
+  background: var(--surface-container-highest);
+}
+
+.btnOutline:active {
+  transform: scale(0.97);
+}
+
+.btnDanger {
+  padding: 8px 24px;
+  border: none;
+  background: transparent;
+  color: var(--error);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btnDanger:hover {
+  background: rgba(255, 180, 171, 0.1);
+}
+
+.btnDanger:active {
+  transform: scale(0.97);
+}
+
+/* ---- Action bar ---- */
+
+.actionsBar {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .actionsBar {
+    flex-direction: row;
+  }
+}
+
+.btnText {
+  width: 100%;
+  padding: 12px 32px;
+  background: transparent;
+  border: none;
+  color: var(--on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .btnText {
+    width: auto;
+  }
+}
+
+.btnText:hover {
+  color: var(--on-surface);
+}
+
+.btnPrimary {
+  width: 100%;
+  padding: 12px 40px;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 30px -10px rgba(79, 70, 229, 0.5);
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+@media (min-width: 640px) {
+  .btnPrimary {
+    width: auto;
+  }
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.btnPrimary:active {
+  transform: scale(0.98);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.savedNote {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--tertiary);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .savedNote {
+    text-align: right;
+  }
+}
