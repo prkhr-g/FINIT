@@ -5,6 +5,8 @@ import styles from './page.module.css';
 import { useAuth } from '@/providers/AuthProvider';
 import { User, Globe, ShieldCheck, Camera, Info } from 'lucide-react';
 
+import { userService } from '@/services/user.service';
+
 const CURRENCIES = [
   { value: 'INR', label: 'INR - Indian Rupee (₹)' },
   { value: 'USD', label: 'USD - United States Dollar ($)' },
@@ -46,6 +48,7 @@ export default function SettingsPage() {
   const [form, setForm] = React.useState<ProfileForm>(initialForm);
   const [saving, setSaving] = React.useState(false);
   const [savedAt, setSavedAt] = React.useState<Date | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   // Keep the form in sync if the auth user loads in after first render.
   React.useEffect(() => {
@@ -55,21 +58,25 @@ export default function SettingsPage() {
   const handleChange = (field: keyof ProfileForm, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setSavedAt(null);
+    setError(null);
   };
 
   const handleDiscard = () => {
     setForm(initialForm);
     setSavedAt(null);
+    setError(null);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setError(null);
     try {
-      // TODO: wire up to a settings/profile service once one exists —
-      // e.g. await profileService.update(form)
-      await new Promise((resolve) => setTimeout(resolve, 400));
+      const fullName = `${form.firstName} ${form.lastName}`.trim();
+      await userService.updateAccount({ fullName });
       setSavedAt(new Date());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update settings');
     } finally {
       setSaving(false);
     }
@@ -271,6 +278,7 @@ export default function SettingsPage() {
 
       {/* ── Actions ── */}
       <div className={styles.actionsBar}>
+        {error && <span className={styles.savedNote} style={{ color: 'var(--error, #e74c3c)' }}>{error}</span>}
         {savedAt && <span className={styles.savedNote}>Saved</span>}
         <button type="button" className={styles.btnText} onClick={handleDiscard}>
           Discard Changes
