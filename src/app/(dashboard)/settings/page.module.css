@@ -7,6 +7,46 @@
    ============================================================ */
 
 .page {
+  --surface: #faf9ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #ffffff;
+  --surface-container-high: #f1f5f9;
+  --surface-container-highest: #e2e8f0;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline: #64748b;
+  --outline-variant: #e2e8f0;
+
+  --primary: #1558c6;
+  --on-primary: #ffffff;
+  --primary-container: #dbeafe;
+  --on-primary-container: #1e40af;
+
+  --secondary: #0284c7;
+  --secondary-container: #e0f2fe;
+  --on-secondary-container: #0369a1;
+
+  --tertiary: #10b981;
+  --tertiary-container: #d1fae5;
+  --on-tertiary-container: #065f46;
+
+  --error: #ef4444;
+  --error-container: #fee2e2;
+
+  --font-display: var(--font-roboto), sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --bg-card: #ffffff;
+
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--on-surface);
+  font-family: var(--font-display);
+}
+
+:global(html.dark) .page {
   --surface: #080e1a;
   --surface-container-lowest: #080e19;
   --surface-container-low: #0d1526;
@@ -34,16 +74,7 @@
   --error: #ef4444;
   --error-container: #7f1d1d;
 
-  --font-display: var(--font-roboto), sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
   --bg-card: linear-gradient(180deg, #111827 0%, #0b1221 100%);
-
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  color: var(--on-surface);
-  font-family: var(--font-display);
 }
 
 /* ---- Header ---- */

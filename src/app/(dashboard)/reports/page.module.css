@@ -8,6 +8,51 @@
    ============================================================ */
 
 .page {
+  --surface-dim: #faf9ff;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #ffffff;
+  --surface-container-high: #f1f5f9;
+  --surface-container-highest: #e2e8f0;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline: #64748b;
+  --outline-variant: #e2e8f0;
+
+  --primary: #1558c6;
+  --primary-fixed-dim: #1558c6;
+  --primary-container: #dbeafe;
+  --on-primary: #ffffff;
+  --on-primary-container: #1e40af;
+
+  --secondary: #0284c7;
+  --secondary-container: #e0f2fe;
+  --on-secondary-container: #0369a1;
+
+  --tertiary: #10b981;
+  --tertiary-container: #d1fae5;
+  --on-tertiary-container: #065f46;
+
+  --error: #ef4444;
+  --error-container: #fee2e2;
+  --on-error-container: #991b1b;
+
+  --font-display: var(--font-roboto), sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Custom card/progress rules from code.html style block */
+  --card-bg: #ffffff;
+  --card-border: 1px solid #e2e8f0;
+  --progress-track: #e2e8f0;
+  --progress-fill: #1558c6;
+
+  background: transparent;
+  color: var(--on-surface);
+  font-family: var(--font-display);
+}
+
+:global(html.dark) .page {
   --surface-dim: #080e1a;
   --surface-bright: #1f2937;
   --surface-container-lowest: #080e19;
@@ -38,21 +83,10 @@
   --error-container: #7f1d1d;
   --on-error-container: #ffffff;
 
-  --font-display: var(--font-roboto), sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  /* Custom card/progress rules from code.html style block */
   --card-bg: linear-gradient(180deg, #111827 0%, #0b1221 100%);
   --card-border: 1px solid #1a2235;
   --progress-track: #1a2235;
   --progress-fill: #1558c6;
-
-  background: transparent;
-  color: var(--on-surface);
-  font-family: var(--font-display);
-  padding: 0;
-  min-height: 100%;
-  position: relative;
 }
 
 /* Ambient glow removed â€” Finance page cards are flat, no glow blob behind page */

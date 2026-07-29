@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './layout.module.css';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function DashboardLayout({
   children,
@@ -21,13 +22,11 @@ export default function DashboardLayout({
     { name: 'Settings', path: '/settings' },
   ];
 
-  const isActiveDashboard = pathname === '/dashboard' || pathname === '/';
-
   return (
     <div className={styles.container}>
       <aside className={styles.sidebar}>
         <div className={styles.logo}>FINT</div>
-        <nav>
+        <nav className="flex-1">
           {navItems.map((item) => {
             const isActive = pathname === item.path || (pathname === '/' && item.path === '/dashboard');
             return (
@@ -42,6 +41,9 @@ export default function DashboardLayout({
             );
           })}
         </nav>
+        <div className="mt-auto pt-6 border-t border-slate-800/60">
+          <ThemeToggle showLabel={true} className="w-full justify-center py-2" />
+        </div>
       </aside>
       <main className={styles.mainContent}>
         {children}
@@ -49,3 +51,4 @@ export default function DashboardLayout({
     </div>
   );
 }
+

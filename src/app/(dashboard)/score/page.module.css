@@ -4,6 +4,47 @@
    ============================================================ */
 
 .page {
+  --surface-dim: #faf9ff;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #ffffff;
+  --surface-container-high: #f1f5f9;
+  --surface-container-highest: #e2e8f0;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline: #64748b;
+  --outline-variant: #e2e8f0;
+
+  --primary: #1558c6;
+  --primary-fixed-dim: #1558c6;
+  --primary-container: #dbeafe;
+  --on-primary: #ffffff;
+  --on-primary-container: #1e40af;
+
+  --secondary: #0284c7;
+  --secondary-container: #e0f2fe;
+  --on-secondary-container: #0369a1;
+
+  --tertiary: #ea580c;
+  --tertiary-container: #ffedd5;
+  --on-tertiary-container: #c24100;
+
+  --error: #ef4444;
+  --error-container: #fee2e2;
+  --on-error-container: #991b1b;
+
+  --font-display: var(--font-roboto), sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Custom card/progress rules from code.html style block */
+  --card-bg: #ffffff;
+  --card-border: 1px solid #e2e8f0;
+  --progress-track: #e2e8f0;
+  --progress-fill: #1558c6;
+}
+
+:global(html.dark) .page {
   --surface-dim: #0d141e;
   --surface-bright: #333945;
   --surface-container-lowest: #080e19;
@@ -34,15 +75,13 @@
   --error-container: #93000a;
   --on-error-container: #ffdad6;
 
-  --font-display: var(--font-roboto), sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  /* Custom card/progress rules from code.html style block */
   --card-bg: #0A1220;
   --card-border: 1px solid #1A2433;
   --progress-track: #1A2433;
   --progress-fill: #48d9ff;
+}
 
+.page {
   background: transparent;
   color: var(--on-surface);
   font-family: var(--font-display);

@@ -4,6 +4,7 @@ import React from 'react';
 import styles from './page.module.css';
 import { useAuth } from '@/providers/AuthProvider';
 import { User, Globe, ShieldCheck, Camera, Info } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 import { userService } from '@/services/user.service';
 
@@ -88,6 +89,7 @@ export default function SettingsPage() {
     <form className={styles.page} onSubmit={handleSave}>
       <div className={styles.header}>
         <h1 className={styles.title}>Account Settings</h1>
+        <ThemeToggle showLabel />
       </div>
 
       {/* ── Profile Identity ── */}
