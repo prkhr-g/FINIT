@@ -3,6 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import api from '@/services/api';
 import { financeService } from '@/services/finance.service';
+import styles from './page.module.css';
+import {
+  Landmark,
+  Wallet,
+  TrendingUp,
+  Shield,
+  Home,
+  CloudDownload,
+  GraduationCap,
+  LineChart,
+  MoreVertical,
+  CalendarDays,
+} from 'lucide-react';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -504,6 +517,3 @@ function MilestonesTable({ milestones }: { milestones: Milestone[] }) {
   );
 }
 
-// Icons referenced only in comments/data above but kept imported for when
-// real milestone data supplies them: Home, CloudDownload, GraduationCap.
-export const milestoneIconLibrary = { Home, CloudDownload, GraduationCap };
