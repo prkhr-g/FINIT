@@ -17,6 +17,7 @@ import { AdvisoryService } from './services/advisory.service';
 
 // AI Provider
 import { GeminiProvider } from './providers/gemini.provider';
+import { OpenAiProvider } from './providers/openai.provider';
 
 // Calculators
 import { FutureValueCalculator } from './calculators/future-value.calculator';
@@ -80,6 +81,7 @@ import { ScoreModule } from '../score/score.module';
 
     // AI Provider
     GeminiProvider,
+    OpenAiProvider,
 
     // Calculators
     FutureValueCalculator,
