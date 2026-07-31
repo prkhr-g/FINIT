@@ -9,30 +9,29 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Security Middlewares
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
   app.enableCors({
     origin: true,
     credentials: true,
   });
 
-  // Global validation pipe — class-validator + class-transformer
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,          // Strip unknown fields
+      whitelist: true,
       forbidNonWhitelisted: true,
-      transform: true,          // Auto-transform payloads to DTO instances
+      transform: true,
     }),
   );
 
-  // Apply Global Exception Filter & Logging Interceptor
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
 
-  // Global prefix
   app.setGlobalPrefix('api/v1');
 
-  // Swagger Documentation Setup
   const config = new DocumentBuilder()
     .setTitle('FINT Backend API')
     .setDescription('API documentation for FINT - AI Financial Advisor')
@@ -44,7 +43,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
-  console.log(`🚀 FINT Backend running on http://localhost:${port}/api/v1`);
-  console.log(`📚 Swagger documentation available at http://localhost:${port}/api/docs`);
+  console.log(`Backend running on http://localhost:${port}/api/v1`);
+  console.log(`Swagger documentation available at http://localhost:${port}/api/docs`);
 }
 bootstrap();
