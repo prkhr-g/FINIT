@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --bg-main: #FAF7F2;
+  --bg-sidebar: #1E234A;
+  --bg-header: #1E234A;
+  --bg-card: #FFFFFF;
+  --bg-ai-card: #1E234A;
+  --border-card: 1px solid #EAE3D9;
+  --border-style: solid;
+  
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-header: #FFFFFF;
+  --text-label: #5369A8;
+  --text-logo: #FFFFFF;
+  --text-ai-card: #FFFFFF;
+  
+  --nav-active-bg: #4175FC;
+  --nav-active-text: #FFFFFF;
+  --nav-inactive-text: #8993B0;
+  
+  --chart-ring-bg: #EFEFEF;
+  --chart-ring-fg: #4175FC;
+}
+
+html.dark,
+:root.dark {
+  --bg-main: #060814;
+  --bg-sidebar: #0C1021;
+  --bg-header: transparent;
+  --bg-card: #0A0D20;
+  --bg-ai-card: #0A0D20;
+  --border-card: 1px dashed #293056;
+  --border-style: dashed;
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: #8993B0;
+  --text-header: #FFFFFF;
+  --text-label: #5369A8;
+  --text-logo: #FFFFFF;
+  --text-ai-card: #FFFFFF;
+  
+  --nav-active-bg: #3262FE;
+  --nav-active-text: #FFFFFF;
+  --nav-inactive-text: #8993B0;
+  
+  --chart-ring-bg: #1B2144;
+  --chart-ring-fg: #3262FE;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-roboto), var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+

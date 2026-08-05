@@ -1,0 +1,1161 @@
+/* ============================================================
+   FINT â€” dark "Luminous Fintech" theme
+   Palette + type scale sourced from the vai design tokens.
+   Base tokens/classes below are unchanged from the FINT Score
+   theme; the "Dashboard page additions" section at the bottom
+   adds the sidebar / topbar / summary / chart / yield / heatmap /
+   milestones classes used by the analytics dashboard page.
+   ============================================================ */
+
+.page {
+  --surface-dim: #faf9ff;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #ffffff;
+  --surface-container-high: #f1f5f9;
+  --surface-container-highest: #e2e8f0;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline: #64748b;
+  --outline-variant: #e2e8f0;
+
+  --primary: #1558c6;
+  --primary-fixed-dim: #1558c6;
+  --primary-container: #dbeafe;
+  --on-primary: #ffffff;
+  --on-primary-container: #1e40af;
+
+  --secondary: #0284c7;
+  --secondary-container: #e0f2fe;
+  --on-secondary-container: #0369a1;
+
+  --tertiary: #10b981;
+  --tertiary-container: #d1fae5;
+  --on-tertiary-container: #065f46;
+
+  --error: #ef4444;
+  --error-container: #fee2e2;
+  --on-error-container: #991b1b;
+
+  --font-display: var(--font-roboto), sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Custom card/progress rules from code.html style block */
+  --card-bg: #ffffff;
+  --card-border: 1px solid #e2e8f0;
+  --progress-track: #e2e8f0;
+  --progress-fill: #1558c6;
+
+  background: transparent;
+  color: var(--on-surface);
+  font-family: var(--font-display);
+}
+
+:global(html.dark) .page {
+  --surface-dim: #080e1a;
+  --surface-bright: #1f2937;
+  --surface-container-lowest: #080e19;
+  --surface-container-low: #0d1526;
+  --surface-container: #111827;
+  --surface-container-high: #1a2235;
+  --surface-container-highest: #243049;
+  --on-surface: #ffffff;
+  --on-surface-variant: #8b90a3;
+  --outline: #4b5563;
+  --outline-variant: #1a2235;
+
+  --primary: #3b82f6;
+  --primary-fixed-dim: #3b82f6;
+  --primary-container: #1558c6;
+  --on-primary: #ffffff;
+  --on-primary-container: #ffffff;
+
+  --secondary: #3b82f6;
+  --secondary-container: #1d4ed8;
+  --on-secondary-container: #ffffff;
+
+  --tertiary: #10b981;
+  --tertiary-container: #064e3b;
+  --on-tertiary-container: #ffffff;
+
+  --error: #ef4444;
+  --error-container: #7f1d1d;
+  --on-error-container: #ffffff;
+
+  --card-bg: linear-gradient(180deg, #111827 0%, #0b1221 100%);
+  --card-border: 1px solid #1a2235;
+  --progress-track: #1a2235;
+  --progress-fill: #1558c6;
+}
+
+/* Ambient glow removed â€” Finance page cards are flat, no glow blob behind page */
+.page::before {
+  display: none;
+}
+
+/* ---- Flat card base (matches Finance page: NET WORTH / CASH FLOW / etc) ---- */
+.glassCard {
+  position: relative;
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: 1rem;
+  z-index: 1;
+  box-shadow: none;
+}
+
+/* ---- Header ---- */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 36px;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.subtitle {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--on-surface-variant);
+  margin: 0;
+  max-width: 100%;
+}
+
+.recalcBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.recalcBtn:hover:not(:disabled) {
+  background: #1e3a8a;
+  transform: translateY(-1px);
+}
+
+.recalcBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  font-size: 20px;
+  display: inline-block;
+  user-select: none;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(195, 192, 255, 0.35);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Error banner ---- */
+
+.errorBanner {
+  composes: glassCard;
+  border-color: rgba(255, 180, 171, 0.3);
+  background: var(--surface-container-low);
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  color: var(--error);
+  font-size: 13.5px;
+}
+
+/* ---- Bento grid ---- */
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Score gauge card ---- */
+
+.gaugeSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .gaugeSection { grid-column: span 5; }
+}
+
+.gaugeWrap {
+  position: relative;
+  width: 240px;
+  height: 240px;
+}
+
+.gaugeSvg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gaugeTrack {
+  color: var(--progress-track);
+}
+
+.gaugeFill {
+  transition: stroke-dashoffset 1s ease;
+}
+
+.gaugeCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.gaugeScore {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--on-surface);
+}
+
+.gaugeOutOf {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  margin: 24px 0 12px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.gaugeCaption {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--on-surface-variant);
+  max-width: 30ch;
+  margin: 0;
+}
+
+.gaugeEmpty {
+  color: var(--on-surface-variant);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+/* Tier colors reused across gauge / badges / bars */
+.tierCritical { color: var(--error); }
+.tierWatch { color: var(--secondary); }
+.tierStable { color: var(--primary); }
+.tierExcellent { color: var(--tertiary); }
+
+.bgTierCritical { background: rgba(255, 180, 171, 0.12); border: 1px solid rgba(255, 180, 171, 0.3); }
+.bgTierWatch { background: rgba(190, 198, 224, 0.12); border: 1px solid rgba(190, 198, 224, 0.3); }
+.bgTierStable { background: rgba(195, 192, 255, 0.12); border: 1px solid rgba(195, 192, 255, 0.3); }
+.bgTierExcellent { background: rgba(78, 222, 163, 0.12); border: 1px solid rgba(78, 222, 163, 0.3); }
+
+.fillCritical { background: var(--error); }
+.fillWatch { background: var(--secondary); }
+.fillStable { background: var(--primary); }
+.fillExcellent { background: var(--tertiary); }
+
+.badgeCritical { background: rgba(147, 0, 10, 0.3); color: var(--error); }
+.badgeWatch { background: rgba(63, 70, 92, 0.5); color: var(--secondary); }
+.badgeStable { background: rgba(195, 192, 255, 0.1); color: var(--primary); }
+.badgeExcellent { background: rgba(78, 222, 163, 0.1); color: var(--tertiary); }
+
+/* ---- Insights card ---- */
+
+.insightsSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .insightsSection { grid-column: span 7; }
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--on-surface);
+  margin: 0 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.insightList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.insightItem {
+  padding: 1rem;
+  background: var(--surface-container);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  border-left: 4px solid var(--primary);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.insightItem:hover {
+  transform: translateX(4px);
+}
+
+.insightIconWrap {
+  flex-shrink: 0;
+  padding: 8px;
+  border-radius: 0.5rem;
+  background: rgba(195, 192, 255, 0.15);
+  color: var(--primary-fixed-dim);
+  display: flex;
+}
+
+.insightText {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.insightEmpty {
+  color: var(--on-surface-variant);
+  font-size: 14px;
+}
+
+/* ---- Missing data banner ---- */
+
+.missingBanner {
+  composes: glassCard;
+  grid-column: span 12;
+  border: 1px dashed rgba(195, 192, 255, 0.35);
+  background: var(--surface-container-low);
+  padding: 18px 22px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.missingText {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.missingLinks {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.missingLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.missingLink:hover {
+  text-decoration: underline;
+}
+
+/* ---- Pillar breakdown ---- */
+
+.pillarSection {
+  composes: glassCard;
+  grid-column: span 12;
+  overflow: hidden;
+}
+
+.pillarHeader {
+  padding: 2rem;
+  border-bottom: 1px solid var(--outline-variant);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pillarList {
+  display: flex;
+  flex-direction: column;
+}
+
+.pillarRow {
+  display: grid;
+  grid-template-columns: minmax(140px, 2fr) minmax(120px, 4fr) 60px minmax(90px, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 1.1rem 2rem;
+  border-bottom: var(--card-border);
+  transition: background 0.2s ease;
+}
+
+.pillarRow:last-child {
+  border-bottom: none;
+}
+
+.pillarRow:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pillarNameCol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pillarName {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pillarWeight {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--on-surface-variant);
+  display: block;
+}
+
+.pillarTrack {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--progress-track);
+  overflow: hidden;
+}
+
+.pillarFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+
+.pillarScore {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.pillarBadgeWrap {
+  text-align: right;
+}
+
+.pillarBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pillarTip {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--on-surface-variant);
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--primary);
+  border-radius: 4px;
+}
+
+@media (max-width: 700px) {
+  .pillarRow {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+  }
+  .pillarBadgeWrap { text-align: left; }
+  .pillarScore { text-align: left; }
+}
+
+/* ---- Trend / history ---- */
+
+.trendSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 2rem 2rem 1rem;
+}
+
+.chartEmpty {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--on-surface-variant);
+  font-size: 13.5px;
+  padding: 0 20px;
+  border: 1px dashed var(--outline-variant);
+  border-radius: 0.75rem;
+}
+
+/* ---- Methodology ---- */
+
+.methodologySection {
+  composes: glassCard;
+  grid-column: span 12;
+  overflow: hidden;
+}
+
+.methodologyToggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.methodologyIcon {
+  transition: transform 0.25s ease;
+  color: var(--primary);
+}
+
+.methodologyIconOpen {
+  transform: rotate(180deg);
+}
+
+.methodologyBody {
+  padding: 0 2rem 1.5rem;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--on-surface-variant);
+}
+
+/* ---- Footer ---- */
+
+.footer {
+  grid-column: span 12;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--outline);
+  opacity: 0.7;
+  padding-top: 8px;
+}
+
+/* â”€â”€ Grade Analysis â”€â”€ */
+.gradeSection {
+  composes: glassCard;
+  grid-column: span 12;
+  padding: 1.5rem;
+}
+
+.gradeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .gradeContainer {
+    flex-direction: row;
+  }
+}
+
+.gradeInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.gradeTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--on-surface);
+  margin: 0 0 4px;
+}
+
+.gradeSubtitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.gradeList {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .gradeList {
+    gap: 2rem;
+  }
+}
+
+.gradeItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.gradeCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--outline);
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.gradeCircleActive {
+  width: 64px;
+  height: 64px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+  font-size: 1.5rem;
+  box-shadow: 0 0 20px rgba(184, 195, 255, 0.4);
+}
+
+.gradeItemLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--outline);
+}
+
+.gradeItemLabelActive {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.loading {
+  padding: 80px;
+  text-align: center;
+  color: var(--primary);
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   Reports page additions
+   Summary cards / growth chart / yield bars / cash-flow heatmap /
+   milestones table. The app shell already renders the sidebar and
+   topbar (see the shared layout) so this file only styles content
+   that lives inside that shell.
+   Reuses the tokens and .glassCard base defined above.
+   ============================================================ */
+
+/* ---- Content canvas ---- */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 2rem;
+}
+
+/* ---- Summary cards ---- */
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .summaryGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .summaryGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.summaryCard {
+  composes: glassCard;
+  padding: 24px;
+  transition: border-color 0.2s ease;
+}
+
+.summaryCard:hover {
+  border-color: rgba(184, 195, 255, 0.5);
+}
+
+.summaryCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.summaryIconWrap {
+  padding: 8px;
+  border-radius: 0.5rem;
+  display: flex;
+}
+
+.summaryDelta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.summaryLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-variant);
+  margin: 0 0 4px;
+}
+
+.summaryValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin: 0;
+}
+
+/* ---- Growth chart ---- */
+
+.chartSection {
+  composes: glassCard;
+  padding: 2rem;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.chartLegend {
+  display: flex;
+  gap: 16px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legendLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--on-surface-variant);
+}
+
+.chartBody {
+  height: 320px;
+  width: 100%;
+  position: relative;
+}
+
+.chartAxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+/* ---- Two-column section (yield + heatmap) ---- */
+
+.twoColGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .twoColGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- Yield by category ---- */
+
+.yieldCard {
+  composes: glassCard;
+  padding: 2rem;
+}
+
+.yieldRows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.yieldRowHead {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.yieldPct {
+  color: var(--tertiary);
+}
+
+.yieldTrack {
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--surface-container-highest);
+  overflow: hidden;
+}
+
+.yieldFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+
+/* ---- Cash flow heatmap ---- */
+
+.heatmapCard {
+  composes: glassCard;
+  padding: 2rem;
+}
+
+.heatmapLegend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--on-surface-variant);
+}
+
+.heatmapSwatches {
+  display: flex;
+  gap: 4px;
+}
+
+.heatmapSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.heatmapGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.heatmapCell {
+  height: 64px;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.heatmapCell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(184, 195, 255, 0.3);
+}
+
+.heatmapCellEmpty {
+  composes: heatmapCell;
+  background: rgba(46, 53, 64, 0.4);
+  border: 1px solid var(--outline-variant);
+}
+
+.heatmapMonth {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.heatmapAmount {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* ---- Milestones table ---- */
+
+.milestonesSection {
+  composes: glassCard;
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.milestonesHeader {
+  padding: 2rem;
+  border-bottom: 1px solid var(--outline-variant);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.milestonesTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.milestonesSubtitle {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  margin: 4px 0 0;
+}
+
+.scheduleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.scheduleBtn:hover {
+  filter: brightness(1.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tableHead {
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
+}
+
+.tableHead th {
+  padding: 16px 32px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.tableBody tr {
+  border-top: 1px solid rgba(67, 70, 86, 0.2);
+  transition: background 0.2s ease;
+}
+
+.tableBody tr:hover {
+  background: var(--surface-container-high);
+}
+
+.tableBody td {
+  padding: 20px 32px;
+  font-size: 14px;
+}
+
+.tableEmpty {
+  text-align: center;
+  padding: 40px 32px;
+  color: var(--on-surface-variant);
+}
+
+.eventCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+}
+
+.accountChip {
+  padding: 4px 8px;
+  background: var(--surface-container-highest);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.progressTrack {
+  width: 128px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--surface-container-highest);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--tertiary);
+}
+
+.progressLabel {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+.actionBtn {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.actionBtn:hover {
+  text-decoration: underline;
+}
+
+/* ---- Tone modifiers (summary deltas / icons / bars / heatmap) ---- */
+
+.deltaPositive { color: var(--secondary); }
+.deltaNegative { color: var(--error); }
+.deltaNeutral { color: var(--on-surface-variant); }
+
+.iconPrimary { background: rgba(184, 195, 255, 0.15); color: var(--primary); }
+.iconTertiary { background: rgba(255, 181, 155, 0.15); color: var(--tertiary); }
+.iconError { background: rgba(255, 180, 171, 0.15); color: var(--error); }
+
+.legendDotPrimary { background: var(--primary); box-shadow: 0 0 8px rgba(184, 195, 255, 0.6); }
+.legendDotError { background: var(--error); box-shadow: 0 0 8px rgba(255, 180, 171, 0.6); }
+
+.yieldFillTertiary { background: var(--tertiary); box-shadow: 0 0 10px rgba(255, 181, 155, 0.4); }
+.yieldFillPrimary { background: var(--primary-container); box-shadow: 0 0 10px rgba(46, 91, 255, 0.4); }
+.yieldFillSecondary { background: var(--secondary); }
+.yieldFillMuted { background: var(--outline-variant); }
+
+.heatmapSwatchFaint { background: rgba(46, 91, 255, 0.15); }
+.heatmapSwatchMid { background: rgba(46, 91, 255, 0.45); }
+.heatmapSwatchFull { background: var(--primary-container); }
+.heatmapSwatchDeficit { background: rgba(147, 0, 10, 0.3); }
+
+.heatmapCellSurplus {
+  composes: heatmapCell;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+
+.heatmapCellDeficit {
+  composes: heatmapCell;
+  background: rgba(147, 0, 10, 0.2);
+  border: 1px solid rgba(147, 0, 10, 0.3);
+  color: var(--error);
+}
