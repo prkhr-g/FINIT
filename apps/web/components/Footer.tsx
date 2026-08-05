@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="eyebrow">Every feature calculates, explains, improves, or monitors the score.</div>
         <h2>Know your FINIT Score.</h2>
         <p>This is the operating system for financial wellbeing — not just a number.</p>
-        <Link href="/pricing" className="btn btn-primary">Explore membership →</Link>
+        <Link href="/signup" className="btn btn-primary">Get my score →</Link>
       </section>
       <footer>
         <div className="footer-grid">

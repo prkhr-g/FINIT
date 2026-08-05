@@ -12,7 +12,7 @@ export default function Header() {
           <Link href="/contact">Contact</Link>
           <Link href="/faq">FAQs</Link>
         </nav>
-        <Link href="/pricing" className="btn btn-primary">Get my score →</Link>
+        <Link href="/signup" className="btn btn-primary">Get my score →</Link>
       </div>
     </header>
   )

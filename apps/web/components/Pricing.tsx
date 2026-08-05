@@ -25,7 +25,7 @@ export default function Pricing() {
             <li>Limited simulations</li>
           </ul>
 
-          <a href="#get-score" className="btn btn-ghost">
+          <a href="/signup" className="btn btn-ghost">
             Get started
           </a>
         </div>
@@ -45,7 +45,7 @@ export default function Pricing() {
             <li>Monthly tracking &amp; badges</li>
           </ul>
 
-          <a href="#get-score" className="btn btn-primary">
+          <a href="/signup" className="btn btn-primary">
             Start free trial
           </a>
         </div>
@@ -64,7 +64,7 @@ export default function Pricing() {
             <li>Priority data integrations</li>
           </ul>
 
-          <a href="#get-score" className="btn btn-ghost">
+          <a href="/contact" className="btn btn-ghost">
             Talk to us
           </a>
         </div>

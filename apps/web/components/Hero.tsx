@@ -35,7 +35,7 @@ export default function Hero() {
         <h1>Every great financial decision <em>starts here.</em></h1>
         <p>Understand your financial life, improve your FINIT Score, and get personalised AI guidance for every important decision—from buying a home to building long-term wealth.</p>
         <div className="hero-ctas">
-          <a href="/pricing" className="btn btn-primary">Get my FINIT Score →</a>
+          <a href="/signup" className="btn btn-primary">Get my FINIT Score →</a>
           <a href="#how-it-works" className="btn btn-ghost">See how it works</a>
         </div>
         <div className="trust-strip">

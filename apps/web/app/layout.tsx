@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Inter, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
+import { AuthProvider } from '@/providers/AuthProvider'
+import { ThemeProvider } from '@/providers/ThemeProvider'
+import { QueryProvider } from '@/providers/QueryProvider'
+import { ToastProvider } from '@/providers/ToastProvider'
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -33,10 +37,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${jakarta.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body>
         <div className="grain"></div>
-        {children}
+        <QueryProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <ToastProvider>{children}</ToastProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   )

@@ -3,18 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/web",
+    "apps/api"
   ],
   "scripts": {
-    "build": "npm run build:web && npm run build:dashboard && npm run build:api",
+    "build": "npm run build:web && npm run build:api",
     "build:web": "npm run build --workspace=@fint/web",
-    "build:dashboard": "npm run build --workspace=@fint/dashboard",
     "build:api": "npm run build --workspace=@fint/api",
     "dev:web": "npm run dev --workspace=@fint/web",
-    "dev:dashboard": "npm run dev --workspace=@fint/dashboard",
     "dev:api": "npm run start:dev --workspace=@fint/api",
     "lint:web": "npm run lint --workspace=@fint/web",
-    "lint:dashboard": "npm run lint --workspace=@fint/dashboard",
     "test:api": "npm run test --workspace=@fint/api"
   },
   "engines": {
