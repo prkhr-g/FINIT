@@ -1,26 +1,20 @@
 {
-  "name": "fint-nextjs",
+  "name": "fint",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "build": "npm run build --workspace=@fint/web && npm run build --workspace=@fint/api",
+    "build:web": "npm run build --workspace=@fint/web",
+    "build:api": "npm run build --workspace=@fint/api",
+    "dev:web": "npm run dev --workspace=@fint/web",
+    "dev:api": "npm run start:dev --workspace=@fint/api",
+    "lint:web": "npm run lint --workspace=@fint/web",
+    "test:api": "npm run test --workspace=@fint/api"
   },
-  "dependencies": {
-    "next": "16.2.10",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.10",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+  "engines": {
+    "node": ">=20"
   }
 }
