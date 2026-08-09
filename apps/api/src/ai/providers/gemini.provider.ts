@@ -9,8 +9,9 @@ const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 @Injectable()
 export class GeminiProvider implements AIProvider, OnModuleInit {
   private readonly logger = new Logger(GeminiProvider.name);
+
   private client: GoogleGenAI;
-  private readonly model = 'gemini-2.0-flash';
+  private model = 'gemini-2.0-flash';
   private readonly maxRetries = 3;
 
   constructor(private readonly config: ConfigService) {}
@@ -21,6 +22,7 @@ export class GeminiProvider implements AIProvider, OnModuleInit {
       this.logger.warn('GEMINI_API_KEY is not set. AI features will be unavailable.');
       return;
     }
+    this.model = this.config.get<string>('GEMINI_MODEL') || this.model;
     this.client = new GoogleGenAI({ apiKey });
     this.logger.log(`GeminiProvider initialized (model: ${this.model})`);
   }
