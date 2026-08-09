@@ -108,25 +108,6 @@ export class AiService {
     }
   }
 
-  // 4. Chat — with conversation persistence
-  async chat(userId: string, question: string) {
-    try {
-      this.logger.log(`Chat request — User: ${userId}`);
-      await this.checkUsage(userId);
-
-      const provider = this.configService.get<string>('AI_PROVIDER') || 'gemini';
-      const prompt = this.promptBuilder.buildAdvisorPrompt(question);
-      const answer = await this.gemini.generate(prompt);
-
-      await this.conversationRepo.create({ userId, question, answer, provider });
-      return this.createResponse({ answer }, 'Chat Response Generated');
-    } catch (error) {
-      this.logger.error(`Chat failed — ${userId}: ${getErrorMessage(error)}`);
-      if (error instanceof HttpException) throw error;
-      throw new HttpException('AI Chat Service Unavailable', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
   // 5. Health check
   async health() {
     this.logger.log('AI Health Check');

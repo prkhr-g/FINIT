@@ -3,7 +3,6 @@ import { AiService } from '../services/ai.service';
 import { RecommendationDto } from '../dto/recommendation.dto';
 import { ForecastDto } from '../dto/forecast.dto';
 import { SimulationDto } from '../dto/simulation.dto';
-import { ChatDto } from '../dto/chat.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
@@ -47,15 +46,6 @@ export class AiController {
     return this.aiService.generateSimulation(req.user?.id, body);
   }
 
-  @Version('1')
-  @Post('chat')
-  @UseGuards(JwtAuthGuard, ThrottlerGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Ask AI Financial Advisor Chatbot' })
-  async chat(@Req() req: any, @Body() body: ChatDto) {
-    this.logger.log(`POST /api/v1/ai/chat - User: ${req.user?.id}`);
-    return this.aiService.chat(req.user?.id, body.message);
-  }
 
   @Version('1')
   @Get('history')
