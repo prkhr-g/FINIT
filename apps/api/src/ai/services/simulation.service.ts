@@ -34,24 +34,26 @@ export class SimulationService {
       this.logger.log(`Simulation for user ${userId} — Scenario: ${scenarioData.scenarioType}`);
 
       const currentData = await this.fetchFinancialData(userId);
-      if (currentData.income === 0 && currentData.expense === 0) {
+
+      const totalIncome = currentData.incomes.reduce((sum, i) => sum + Number(i.amount), 0);
+      const totalExpense = currentData.expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+
+      if (totalIncome === 0 && totalExpense === 0) {
         throw new HttpException('Insufficient financial data to simulate', HttpStatus.BAD_REQUEST);
       }
 
-      // Deep clone, apply scenario — DB never touched
       const clonedData = this.cloneAndApplyScenario(currentData, scenarioData);
 
-      const currentSavings = currentData.income - currentData.expense;
-      const newSavings = clonedData.income - clonedData.expense;
+      const currentTotals = this.summarize(currentData);
+      const newTotals = this.summarize(clonedData);
 
       const oldScore = this.scoreService.calculate(currentData).score;
       const newScore = this.scoreService.calculate(clonedData).score;
 
-      const changesString = this.buildChangesString(currentData, clonedData, currentSavings, newSavings);
+      const changesString = this.buildChangesString(currentTotals, newTotals);
       const prompt = this.promptBuilder.buildSimulationPrompt({ oldScore, newScore, changes: changesString });
       const aiResponse = await this.callAI(prompt);
 
-      // Save + Audit in transaction
       await this.prisma.$transaction(async (tx) => {
         await tx.aISimulation.create({
           data: {
@@ -94,31 +96,67 @@ export class SimulationService {
   }
 
   private async fetchFinancialData(userId: string) {
-    const [incomes, expenses, investments, loans] = await Promise.all([
-      this.prisma.income.findMany({ where: { userId } }),
-      this.prisma.expense.findMany({ where: { userId } }),
-      this.prisma.investment.findMany({ where: { userId } }),
-      this.prisma.loan.findMany({ where: { userId, status: 'ACTIVE' } }),
-    ]);
-    return {
-      income: incomes.reduce((acc, i) => acc + Number(i.amount), 0),
-      expense: expenses.reduce((acc, e) => acc + Number(e.amount), 0),
-      investment: investments.reduce((acc, i) => acc + Number(i.currentPrice), 0),
-      loan: loans.reduce((acc, l) => acc + Number(l.remainingBalance), 0),
-    };
+    const [incomes, expenses, loans, assets, investments, insurances, retirement, goals, accounts] =
+      await Promise.all([
+        this.prisma.income.findMany({ where: { userId } }),
+        this.prisma.expense.findMany({ where: { userId } }),
+        this.prisma.loan.findMany({ where: { userId, status: 'ACTIVE' } }),
+        this.prisma.asset.findMany({ where: { userId } }),
+        this.prisma.investment.findMany({ where: { userId } }),
+        this.prisma.insurance.findMany({ where: { userId } }),
+        this.prisma.retirement.findUnique({ where: { userId } }),
+        this.prisma.financialGoal.findMany({ where: { userId } }),
+        this.prisma.financialAccount.findMany({ where: { userId } }),
+      ]);
+
+    return { incomes, expenses, loans, assets, investments, insurances, retirement, goals, accounts };
   }
 
   private cloneAndApplyScenario(current: any, scenario: any) {
     const temp = JSON.parse(JSON.stringify(current));
-    if (scenario.investmentIncrease > 0) temp.investment += scenario.investmentIncrease;
-    if (scenario.loanPrepayment > 0) temp.loan = Math.max(0, temp.loan - scenario.loanPrepayment);
-    if (scenario.salaryIncrease > 0) temp.income += scenario.salaryIncrease;
-    if (scenario.expenseReduction > 0) temp.expense = Math.max(0, temp.expense - scenario.expenseReduction);
+
+    if (scenario.salaryIncrease > 0) {
+      temp.incomes.push({ amount: scenario.salaryIncrease, category: 'OTHER' });
+    }
+
+    if (scenario.expenseReduction > 0) {
+      temp.expenses.push({ amount: -scenario.expenseReduction });
+    }
+
+    if (scenario.investmentIncrease > 0) {
+      temp.investments.push({ currentPrice: scenario.investmentIncrease });
+    }
+
+    if (scenario.loanPrepayment > 0 && temp.loans.length > 0) {
+      let remainingPrepayment = scenario.loanPrepayment;
+      for (const loan of temp.loans) {
+        if (remainingPrepayment <= 0) break;
+        const currentBalance = Number(loan.remainingBalance);
+        const payoff = Math.min(currentBalance, remainingPrepayment);
+        const ratio = currentBalance > 0 ? (currentBalance - payoff) / currentBalance : 0;
+        loan.remainingBalance = Math.max(0, currentBalance - payoff);
+        loan.emiAmount = Number(loan.emiAmount) * ratio;
+        remainingPrepayment -= payoff;
+      }
+    }
+
     return temp;
   }
 
-  private buildChangesString(current: any, clone: any, currentSavings: number, newSavings: number) {
+  private summarize(data: any) {
+    return {
+      income: data.incomes.reduce((sum, i) => sum + Number(i.amount), 0),
+      expense: data.expenses.reduce((sum, e) => sum + Number(e.amount), 0),
+      investment: data.investments.reduce((sum, i) => sum + Number(i.currentPrice), 0),
+      loan: data.loans.reduce((sum, l) => sum + Number(l.remainingBalance), 0),
+    };
+  }
+
+  private buildChangesString(current: any, clone: any) {
     const changes: string[] = [];
+    const currentSavings = current.income - current.expense;
+    const newSavings = clone.income - clone.expense;
+
     if (current.income !== clone.income) changes.push(`Monthly Income: ₹${current.income} → ₹${clone.income}`);
     if (current.expense !== clone.expense) changes.push(`Monthly Expense: ₹${current.expense} → ₹${clone.expense}`);
     if (current.investment !== clone.investment) changes.push(`Investment Corpus: ₹${current.investment} → ₹${clone.investment}`);
