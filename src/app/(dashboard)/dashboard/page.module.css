@@ -1,381 +1,333 @@
-/* ── CSS Variables — Localized Light/Dark Modes ── */
+/* ── CSS Variables — unified with AI Advisor / Notifications pages ── */
 .page {
-  padding: 0;
+  padding: 40px 48px;
+  width: 100%;
   min-height: 100vh;
-  font-family: var(--font-roboto), sans-serif;
+  box-sizing: border-box;
+  font-family: var(--font-roboto), 'Inter', sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .darkTheme {
-  --accent-blue: #1558c6;            /* Brand Blue */
-  --accent-green: #10b981;           /* Success green */
-  --ring-bg: rgba(21, 88, 198, 0.15);
-  --card-bg: linear-gradient(180deg, #111827 0%, #0b1221 100%);
-  --card-border: 1px solid #1a2235;  /* Dark border outline */
-  --card-top-border: 1px solid rgba(255, 255, 255, 0.08);
-  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-  --card-hover-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  --text-pri: #ffffff;               /* Crisp white primary text */
-  --text-sec: #8b90a3;               /* Muted secondary text */
-  --text-lbl: #8b90a3;
-  --page-bg: transparent;            /* Blend with the layout */
-  --score-card-bg: linear-gradient(135deg, #3525cd 0%, #4f46e5 100%);
-  --score-card-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+  --bg: #051424;
+  --surface: #0d1c2d;
+  --surface-hover: #122131;
+  --surface-highest: #1c2b3c;
+  --border: rgba(145, 143, 161, 0.16);
+  --text-pri: #d4e4fa;
+  --text-sec: #9aa8bd;
+  --primary: #6f68ff;
+  --primary-container: #4f46e5;
+  --on-primary-container: #dad7ff;
+  --primary-soft: rgba(79, 70, 229, 0.12);
+  --tertiary: #4edea3;
+  --tertiary-soft: rgba(78, 222, 163, 0.16);
+  --secondary-container: #3f465c;
+  --on-secondary-container: #cfd4e6;
+  --ring-bg: rgba(255, 255, 255, 0.08);
 
-  background: var(--page-bg);
+  background: var(--bg);
   color: var(--text-pri);
 }
 
 .lightTheme {
-  --accent-blue: #0f56c4;            /* Primary Blue from mikku */
-  --accent-green: #10b981;           /* Success green */
-  --ring-bg: #e9edff;                /* surface-container */
-  --card-bg: #ffffff;                /* Pure white surface */
-  --card-border: 1px solid #c3c6d5;  /* outline-variant */
-  --card-top-border: 1px solid transparent;
-  --card-shadow: 0px 4px 20px rgba(21, 27, 43, 0.05); /* diffused Deep Navy shadow */
-  --card-hover-shadow: 0px 10px 25px rgba(21, 27, 43, 0.12);
-  --text-pri: #151b2b;               /* on-surface (Deep Navy) */
-  --text-sec: #424653;               /* on-surface-variant */
-  --text-lbl: #0f56c4;               /* primary */
-  --page-bg: #faf9ff;                /* background from mikku */
-  --score-card-bg: #0f56c4;
-  --score-card-shadow: 0px 4px 12px rgba(15, 86, 196, 0.2);
+  --bg: #faf7f3;
+  --surface: #ffffff;
+  --surface-hover: #f0f1f8;
+  --surface-highest: #e9ecf7;
+  --border: #dfe2ee;
+  --text-pri: #151b2b;
+  --text-sec: #5b6273;
+  --primary: #4f46e5;
+  --primary-container: #4f46e5;
+  --on-primary-container: #ffffff;
+  --primary-soft: rgba(79, 70, 229, 0.08);
+  --tertiary: #0f9d63;
+  --tertiary-soft: rgba(15, 157, 99, 0.12);
+  --secondary-container: #e6e9f7;
+  --on-secondary-container: #3f465c;
+  --ring-bg: #e9edff;
 
-  background: var(--page-bg);
+  background: var(--bg);
   color: var(--text-pri);
 }
 
-/* ══ OVERVIEW HEADER ══ */
+/* ══ HEADER ══ */
 .overviewHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
 .overviewTitle {
-  font-family: var(--font-roboto), sans-serif;
-  font-size: 28px;
+  font-size: 34px;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-pri);
-  margin: 0 0 4px 0;
+  margin: 0;
 }
 
 .overviewSub {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-sec);
-  margin: 0;
+  margin: 6px 0 0;
+}
+.overviewSub strong {
+  color: var(--text-pri);
 }
 
 .overviewActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .actionBtn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: var(--card-border);
-  background: var(--card-bg);
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
   color: var(--text-pri);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.18s ease;
 }
-
 .actionBtn:hover {
-  background: var(--accent-blue);
-  color: #fff;
-  border-color: var(--accent-blue);
+  background: var(--surface-highest);
 }
 
 .actionBtnPrimary {
-  background: var(--accent-blue);
-  color: #fff;
-  border-color: var(--accent-blue);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  border-color: transparent;
 }
-
 .actionBtnPrimary:hover {
-  background: #2d5fe0;
+  background: var(--primary);
 }
 
 .iconBtn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: var(--card-border);
-  background: var(--card-bg);
-  color: var(--text-sec);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--text-sec);
   transition: all 0.18s ease;
 }
-
 .iconBtn:hover {
-  background: var(--accent-blue);
-  color: #fff;
-  border-color: var(--accent-blue);
+  background: var(--surface-hover);
+  color: var(--text-pri);
 }
 
-/* ══ MAIN GRID ══ */
+/* ══ MAIN GRID — 8 / 4 split ══ */
 .mainGrid {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 20px;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
   align-items: start;
 }
 
-/* ══ LEFT COLUMN ══ */
-.leftCol {
+.leftCol,
+.rightCol {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  min-width: 0;
 }
 
-/* ── Balance Card ── */
-.balanceCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-top: var(--card-top-border);
-  border-radius: 12px;
-  padding: 24px 28px 16px;
-  box-shadow: var(--card-shadow);
-  transition: all 0.2s ease-in-out;
-}
-.balanceCard:hover {
-  box-shadow: var(--card-hover-shadow);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
+/* ── Shared card shell ── */
+.balanceCard,
+.statCard,
+.bottomCard,
+.activityCard,
+.goalCard,
+.walletsCard,
+.supportCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: box-shadow 0.2s ease;
 }
 
-.balanceLabel {
-  font-size: 10px;
+.cardTitle {
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-lbl);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  color: var(--text-pri);
+  margin: 0 0 16px;
 }
 
+/* ── Total Ledger Balance ── */
+.balanceCard {
+  position: relative;
+}
+.balanceCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+.balanceLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-sec);
+  margin-bottom: 10px;
+}
+.balanceAmount {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-pri);
+}
 .balanceTrend {
   display: flex;
   align-items: center;
   gap: 4px;
-  float: right;
-  margin-top: -18px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: var(--tertiary-soft);
+  color: var(--tertiary);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.balanceTrendText {
-  font-size: 12px;
-  font-weight: 700;
-  color: #4adc8c;
-}
-
-.balanceAmount {
-  font-family: var(--font-roboto), sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--text-pri);
-  margin: 8px 0 20px;
-  letter-spacing: -0.03em;
-}
-
-/* Bar chart */
 .barChart {
   display: flex;
   align-items: flex-end;
-  gap: 5px;
-  height: 100px;
-  padding-top: 8px;
+  justify-content: space-between;
+  gap: 8px;
+  height: 130px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
 }
-
 .barWrapper {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
-  height: 100%;
   justify-content: flex-end;
-  gap: 4px;
+  height: 100%;
+  position: relative;
 }
-
 .bar {
   width: 100%;
-  border-radius: 4px 4px 0 0;
-  background: #dde6ff;
-  transition: height 0.3s ease;
-  min-height: 4px;
+  border-radius: 3px 3px 0 0;
+  background: var(--surface-highest);
+  transition: background 0.15s ease;
 }
-
 .barActive {
-  background: var(--accent-blue);
+  background: var(--primary-container);
+  box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
 }
-
 .barLabel {
-  font-size: 9px;
+  position: absolute;
+  bottom: -20px;
+  font-size: 10px;
   color: var(--text-sec);
-  letter-spacing: 0.03em;
 }
 
-/* ── Stats Grid ── */
+/* ── 4-up stats grid ── */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 16px;
 }
-
 .statCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-top: var(--card-top-border);
-  border-radius: 12px;
-  padding: 16px 18px;
-  box-shadow: var(--card-shadow);
-  transition: all 0.2s ease-in-out;
+  padding: 18px 20px;
 }
-.statCard:hover {
-  box-shadow: var(--card-hover-shadow);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
-}
-
 .statLabel {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-lbl);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  color: var(--text-sec);
+  margin-bottom: 10px;
 }
-
 .statVal {
-  font-family: var(--font-roboto), sans-serif;
-  font-size: 22px;
-  color: var(--text-pri);
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 4px;
+  color: var(--text-pri);
+  margin-bottom: 6px;
 }
-
 .statNote {
   font-size: 11px;
   color: var(--text-sec);
+  opacity: 0.8;
 }
 
-/* ── Bottom Row (2 cards) ── */
+/* ── Net worth / spending pair ── */
 .bottomRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-
 .bottomCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-top: var(--card-top-border);
-  border-radius: 12px;
-  padding: 20px 22px;
-  min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--card-shadow);
-  transition: all 0.2s ease-in-out;
+  padding: 20px;
 }
-.bottomCard:hover {
-  box-shadow: var(--card-hover-shadow);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
-}
-
-.cardTitle {
-  font-family: var(--font-roboto), sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-pri);
-  margin: 0 0 14px 0;
-}
-
 .emptyBox {
-  flex: 1;
-  border: 1px dashed rgba(156, 163, 175, 0.45);
+  border: 1px dashed var(--border);
   border-radius: 10px;
+  height: 130px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
   text-align: center;
+  padding: 16px;
 }
-
 .emptyBox p {
   font-size: 12px;
   color: var(--text-sec);
-  line-height: 1.6;
   margin: 0;
-  max-width: 200px;
 }
-
 .miniLineChart {
-  flex: 1;
-  min-height: 80px;
+  height: 130px;
 }
 
-/* Category rows */
 .categoryList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
-
 .categoryRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
-
 .catIcon {
   font-size: 16px;
-  flex-shrink: 0;
 }
-
 .catInfo {
   flex: 1;
+  min-width: 0;
 }
-
 .catName {
   font-size: 12px;
-  font-weight: 500;
   color: var(--text-pri);
   text-transform: capitalize;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
-
 .catBar {
   height: 5px;
-  background: #EFEFEF;
-  border-radius: 3px;
+  border-radius: 999px;
+  background: var(--surface-highest);
   overflow: hidden;
 }
-
 .catBarFill {
   height: 100%;
-  background: var(--accent-blue);
-  border-radius: 3px;
+  border-radius: 999px;
+  background: var(--primary);
 }
-
 .catAmt {
   font-size: 12px;
   font-weight: 600;
@@ -383,160 +335,113 @@
   white-space: nowrap;
 }
 
-/* ── Activity Card ── */
+/* ── Recent activity ── */
 .activityCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-top: var(--card-top-border);
-  border-radius: 12px;
-  padding: 20px 24px;
-  box-shadow: var(--card-shadow);
-  transition: all 0.2s ease-in-out;
+  padding: 24px;
 }
-.activityCard:hover {
-  box-shadow: var(--card-hover-shadow);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
-}
-
 .activityHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-
+.activityHeader .cardTitle {
+  margin: 0;
+}
 .viewAll {
   font-size: 12px;
   font-weight: 600;
-  color: var(--accent-blue);
+  color: var(--primary);
   text-decoration: none;
-  transition: opacity 0.15s;
 }
-
 .viewAll:hover {
-  opacity: 0.7;
+  text-decoration: underline;
 }
-
 .activityTableHeader {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 16px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text-lbl);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding-bottom: 10px;
-  border-bottom: var(--card-border);
-  margin-bottom: 8px;
+  color: var(--text-sec);
 }
-
 .activityRow {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 16px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
-  border-bottom: var(--card-border);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
 }
-
 .activityRow:last-child {
   border-bottom: none;
 }
-
 .activityLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
-
 .activityIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  background: var(--ring-bg);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface-highest);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  flex-shrink: 0;
-  border: 1px solid var(--card-border);
 }
-
 .activityName {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-pri);
 }
-
 .activitySub {
   font-size: 11px;
   color: var(--text-sec);
   text-transform: capitalize;
-  margin-top: 1px;
 }
-
 .activityDate {
   font-size: 12px;
   color: var(--text-sec);
-  white-space: nowrap;
 }
-
 .activityAmt {
   font-size: 13px;
-  font-weight: 600;
-  color: #ef4444;
-  white-space: nowrap;
+  font-weight: 700;
+  color: var(--text-pri);
 }
-
 .emptyText {
+  padding: 24px 0;
+  text-align: center;
   font-size: 13px;
   color: var(--text-sec);
-  margin: 12px 0 0;
 }
 
-/* ══ RIGHT COLUMN ══ */
-.rightCol {
+/* ── Saving goal donut ── */
+.goalCard {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-/* ── Goal Card ── */
-.goalCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-top: var(--card-top-border);
-  border-radius: 12px;
-  padding: 20px;
+  align-items: center;
   text-align: center;
-  box-shadow: var(--card-shadow);
-  transition: all 0.2s ease-in-out;
+  padding: 28px 24px;
 }
-.goalCard:hover {
-  box-shadow: var(--card-hover-shadow);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
-}
-
 .goalLabel {
-  font-size: 9px;
+  align-self: flex-start;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-lbl);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 12px;
-  text-align: left;
+  color: var(--text-sec);
+  margin-bottom: 20px;
 }
-
 .donutWrapper {
   position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 12px;
+  width: 112px;
+  height: 112px;
+  margin-bottom: 16px;
 }
-
 .donutCenter {
   position: absolute;
   inset: 0;
@@ -544,258 +449,216 @@
   align-items: center;
   justify-content: center;
 }
-
 .donutPct {
-  font-family: var(--font-roboto), sans-serif;
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--text-pri);
 }
-
-.goalFooter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
 .goalProgress {
   font-size: 12px;
   color: var(--text-sec);
+  margin-bottom: 14px;
 }
-
 .goalLink {
   font-size: 13px;
   font-weight: 600;
-  color: var(--accent-blue);
+  color: var(--primary);
   text-decoration: none;
 }
-
 .goalLink:hover {
   text-decoration: underline;
 }
 
-/* ── Score Card ── */
+/* ── FINT Score card ── */
 .scoreCard {
-  background: linear-gradient(135deg, #3525cd 0%, #4f46e5 100%);
-  border-radius: 12px;
-  padding: 20px;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(79, 70, 229, 0.18);
 }
-.scoreCard:hover {
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
-  transform: translateY(-2px);
+.scoreCardBg {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 130px;
+  height: 130px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  filter: blur(30px);
+  pointer-events: none;
 }
-
 .scoreLabel {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.8;
-  margin-bottom: 6px;
+  opacity: 0.75;
+  margin-bottom: 10px;
+  position: relative;
 }
-
 .scoreVal {
-  font-family: var(--font-roboto), sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1;
-  margin-bottom: 4px;
+  font-size: 34px;
+  font-weight: 700;
+  position: relative;
 }
-
 .scoreGrade {
   font-size: 12px;
   font-weight: 600;
-  opacity: 0.9;
-  margin-bottom: 8px;
+  opacity: 0.85;
+  margin-top: 4px;
+  position: relative;
 }
-
 .scoreRec {
   font-size: 12px;
-  opacity: 0.8;
-  line-height: 1.5;
-  margin: 0 0 12px;
+  opacity: 0.85;
+  margin: 12px 0 16px;
+  position: relative;
 }
-
 .scoreLinkBtn {
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
   text-decoration: none;
-  border: 1px solid rgba(255,255,255,0.4);
-  padding: 6px 12px;
-  border-radius: 6px;
-  display: inline-block;
-  transition: background 0.15s;
+  position: relative;
+  transition: background 0.18s ease;
 }
-
 .scoreLinkBtn:hover {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* ── Wallets Card ── */
+/* ── Linked accounts ── */
 .walletsCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-top: var(--card-top-border);
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: var(--card-shadow);
-  transition: all 0.2s ease-in-out;
+  padding: 24px;
 }
-.walletsCard:hover {
-  box-shadow: var(--card-hover-shadow);
-  border-color: var(--accent-blue);
-  transform: translateY(-2px);
-}
-
 .walletsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
-
+.walletsHeader .cardTitle {
+  margin: 0;
+}
 .addBtn {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: var(--card-border);
-  background: transparent;
+  border: none;
+  background: var(--surface-highest);
   color: var(--text-sec);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.15s ease;
 }
-
 .addBtn:hover {
-  background: var(--accent-blue);
-  color: #fff;
-  border-color: var(--accent-blue);
+  background: var(--primary-soft);
+  color: var(--primary);
 }
-
 .walletsList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
-
 .walletItem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--ring-bg);
-  color: var(--text-pri);
-  border: 1px solid var(--card-border);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
-
-.walletBlue {
-  background: var(--accent-blue);
-  color: #fff;
+.walletHighlight {
+  background: var(--primary-soft);
+  border-color: rgba(79, 70, 229, 0.3);
 }
-
 .walletIcon {
-  font-size: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--surface-highest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
   flex-shrink: 0;
 }
-
 .walletInfo {
   flex: 1;
   min-width: 0;
 }
-
 .walletName {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: inherit;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--text-pri);
 }
-
-.walletBlue .walletName {
-  color: #fff;
-}
-
 .walletBank {
-  font-size: 10px;
-  opacity: 0.65;
-  color: inherit;
+  font-size: 11px;
+  color: var(--text-sec);
 }
-
 .walletAmt {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-pri);
   white-space: nowrap;
 }
 
-.walletBlue .walletAmt {
-  color: #fff;
-}
-
-/* ── Pro Tip ── */
+/* ── Pro tip ── */
 .proTipCard {
-  background: linear-gradient(135deg, #1E234A 0%, #2d3880 100%);
-  border-radius: 14px;
-  padding: 16px 18px;
-  color: #fff;
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  border-radius: 16px;
+  padding: 20px;
 }
-
 .proTipLabel {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #7b8ed0;
   margin-bottom: 8px;
 }
-
 .proTipText {
-  font-size: 12px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.9;
   margin: 0;
 }
 
-/* ── Support Card ── */
+/* ── Support ── */
 .supportCard {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-radius: 14px;
-  padding: 16px 18px;
   text-align: center;
+  padding: 24px;
 }
-
 .supportText {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-sec);
-  margin: 0 0 10px;
+  margin: 0 0 14px;
 }
-
 .supportBtn {
   width: 100%;
-  padding: 9px;
-  border-radius: 8px;
-  border: 1.5px solid var(--accent-blue);
-  background: transparent;
-  color: var(--accent-blue);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text-pri);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: background 0.15s ease;
 }
-
 .supportBtn:hover {
-  background: var(--accent-blue);
-  color: #fff;
+  background: var(--surface-highest);
 }
 
 /* ══ RESPONSIVE ══ */
@@ -803,23 +666,22 @@
   .mainGrid {
     grid-template-columns: 1fr;
   }
-  .rightCol {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .page {
-    padding: 0;
-  }
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
   .bottomRow {
     grid-template-columns: 1fr;
   }
-  .rightCol {
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 20px 16px 56px;
+  }
+  .overviewTitle {
+    font-size: 26px;
+  }
+  .statsGrid {
     grid-template-columns: 1fr;
   }
 }

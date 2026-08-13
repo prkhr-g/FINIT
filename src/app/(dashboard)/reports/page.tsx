@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '@/services/api';
 import { financeService } from '@/services/finance.service';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import styles from './page.module.css';
 import {
   Landmark,
@@ -206,13 +205,10 @@ export default function ReportsPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Reports</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <ThemeToggle showLabel />
-          <button className={styles.scheduleBtn} onClick={handleDownload} disabled={downloading} style={{ background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500 }}>
-            <CloudDownload size={16} />
-            {downloading ? 'Generating...' : 'Download PDF Report'}
-          </button>
-        </div>
+        <button className={styles.scheduleBtn} onClick={handleDownload} disabled={downloading} style={{ background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500 }}>
+          <CloudDownload size={16} />
+          {downloading ? 'Generating...' : 'Download PDF Report'}
+        </button>
       </div>
 
       <div className={styles.content}>
@@ -520,4 +516,3 @@ function MilestonesTable({ milestones }: { milestones: Milestone[] }) {
     </section>
   );
 }
-

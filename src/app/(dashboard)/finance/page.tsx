@@ -3,7 +3,7 @@
 import React from 'react';
 import styles from './page.module.css';
 import { PILLARS, FieldConfig, FinanceEntry } from './pillars.config';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+
 
 type DataMap = Record<string, FinanceEntry[]>;
 
@@ -139,7 +139,6 @@ export default function FinancePage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>Finance Command Center</h1>
-        <ThemeToggle showLabel />
       </div>
 
       <div className={styles.overviewGrid}>

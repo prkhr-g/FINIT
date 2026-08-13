@@ -7,7 +7,6 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { scoreService, ScoreResult, ScoreHistory } from '@/services/score.service';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const PILLAR_LABELS: Record<string, string> = {
   income: 'Income Stability',
@@ -195,21 +194,18 @@ export default function ScorePage() {
         <div>
           <h1 className={styles.title}>FINT Score</h1>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <ThemeToggle showLabel />
-          <button
-            className={styles.recalcBtn}
-            onClick={handleRecalculate}
-            disabled={recalculating}
-          >
-            {recalculating ? (
-              <span className={styles.spinner} />
-            ) : (
-              <span className={styles.icon}>refresh</span>
-            )}
-            {recalculating ? 'Recalculating...' : 'Recalculate Score'}
-          </button>
-        </div>
+        <button
+          className={styles.recalcBtn}
+          onClick={handleRecalculate}
+          disabled={recalculating}
+        >
+          {recalculating ? (
+            <span className={styles.spinner} />
+          ) : (
+            <span className={styles.icon}>refresh</span>
+          )}
+          {recalculating ? 'Recalculating...' : 'Recalculate Score'}
+        </button>
       </div>
 
       {error && (

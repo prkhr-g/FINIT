@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './layout.module.css';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+
 
 export default function DashboardLayout({
   children,
@@ -19,7 +19,7 @@ export default function DashboardLayout({
     { name: 'FINT score', path: '/score' },
     { name: 'AI advisor', path: '/ai' },
     { name: 'Reports', path: '/reports' },
-    { name: 'Settings', path: '/settings' },
+    
   ];
 
   return (
@@ -41,9 +41,7 @@ export default function DashboardLayout({
             );
           })}
         </nav>
-        <div className="mt-auto pt-6 border-t border-slate-800/60">
-          <ThemeToggle showLabel={true} className="w-full justify-center py-2" />
-        </div>
+     
       </aside>
       <main className={styles.mainContent}>
         {children}
